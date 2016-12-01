@@ -1,0 +1,16 @@
+Introduction
+============
+
+The purpose of this lab is to give you more visibility on
+
+* Overview of Kubernetes and its key components
+* Install Kubernetes in different flavors: All-in-one, One kubernetes Cluster (1 Master and 2 minions), One Kubernetes cluster with redundant masters (2 masters and 2 minions)
+* How to launch application in Kubernetes
+
+We consider that you have a valid UDF access (Private Cloud of F5 Networks) to do this lab. If not, you may review the pre-requisites about our lab setup .
+
+The lab guide is hosted here: http://101-lab-kubernetes.readthedocs.io
+
+We also have the option to use an ansible playbook to automate the deployment. 
+
+Some ansible playbooks are provided also to do the same deployment in an automated way (standalone - allinone deployment, cluster deployment): PUT A REF LINK HERE TO ANSIBLE PLAYBOOKS
