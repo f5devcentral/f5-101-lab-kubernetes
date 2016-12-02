@@ -1,7 +1,7 @@
 Flannel overview
 ================
 
-Extract from `here <https://github.com/coreos/flannel#flannel>`_
+This section is an extract from `here <https://github.com/coreos/flannel#flannel>`_
 
 flannel is a virtual network that gives a subnet to each host for use with container runtimes.
 

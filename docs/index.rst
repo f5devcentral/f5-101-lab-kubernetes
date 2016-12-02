@@ -26,6 +26,13 @@ Contents:
    getting-started/kubernetes-overview.rst
    getting-started/kubernetes-networking.rst
    getting-started/flannel-overview.rst
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Labs setup
+
+   labs-setup/labs-setup.rst
+   labs-setup/labs-setup-pre-requisites.rst
  
 Indices and tables
 ==================
