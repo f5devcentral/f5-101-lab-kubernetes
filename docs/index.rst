@@ -22,10 +22,10 @@ Contents:
    :maxdepth: 3
    :caption: Getting Started
 
-   getting-started/intro.rst
-   getting-started/kubernetes-overview.rst
-   getting-started/kubernetes-networking.rst
-   getting-started/flannel-overview.rst
+   getting-started/getting-started-intro.rst
+   getting-started/getting-started-kubernetes-overview.rst
+   getting-started/getting-started-kubernetes-networking.rst
+   getting-started/getting-started-flannel-overview.rst
 
 .. toctree::
    :maxdepth: 3
@@ -33,6 +33,15 @@ Contents:
 
    labs-setup/labs-setup.rst
    labs-setup/labs-setup-pre-requisites.rst
+   labs-setup/labs-setup-access-udf.rst
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Cluster setup
+
+   cluster-setup-guide/cluster-setup-guide-cluster-installation.rst
+   cluster-setup-guide/cluster-setup-guide-master-setup.rst
+   cluster-setup-guide/cluster-setup-guide-node-setup.rst
  
 Indices and tables
 ==================

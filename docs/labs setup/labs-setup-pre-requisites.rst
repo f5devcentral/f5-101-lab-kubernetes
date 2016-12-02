@@ -3,7 +3,7 @@ Pre-requisites
 
 ::
 
-	Those pre requisites have already been done in the UDF blueprints. So the only thing you may want to do when deploying a blueprint is to run a apt-get update  && apt-get upgrade -y on each Ubuntu systems
+	Those pre requisites have already been done in the UDF blueprints. So the only thing you may want to do when deploying a blueprint is to run a apt-get update  && apt-get upgrade -y on each Ubuntu system
 
 
 to deploy Kubernetes successfully you will need the following: 
@@ -12,25 +12,43 @@ to deploy Kubernetes successfully you will need the following:
 * docker and bridge-utils should be installed on **each node** (one best practise is to run some binaries in a container instead of as a service: etcd, apiserver, controller manager, and scheduler)
 * make sure that the master(s) has/have internet access
 
-Install and setup docker
-------------------------
-We have to install docker-engine on the masters and nodes to be able to run docker containers
+.. _source_list:
 
-on **each master and node**, do the following:
+Setup apt source list
+---------------------
+
+To deploy Kubernetes, we will need to add a kubernetes source list to apt to retrieve this package 
+
+on **each master and node**, do the following (**already done in UDF blueprints**):
 
 ::
-	#this command identify the distro: ie ubuntu (a line starting with # is a comment, don't execute)
-	DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]') 
 
-	#this command will identify the version for the distro. For example #xenial  ubuntu version)
+	#this command will identify the version for the distro. For example #xenial ubuntu version
 	CODENAME=$(lsb_release -cs)
 
-	sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 
-	printf "deb https://apt.dockerproject.org/repo ${DISTRO}-${CODENAME} main" | sudo tee /etc/apt/sources.list.d/docker.list
+	printf "deb http://apt.kubernetes.io/ kubernetes-${CODENAME} main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 	sudo apt-get update
 
-	sudo apt-get install -y docker-engine bridge-utils
+
+Installation
+------------
+
+this section mentions commands that must be run on **all systems**
+
+First thing will be to install docker since some Kubernetes services will run into containers and we will deploy app into containers (for resiliency, availability, etc..). 
+
+::
+
+	sudo apt-get install -y docker.io
+
+
+once docker is installed, we can install our Kubernetes components: 
+
+::
+
+	sudo apt-get install -y kubelet kubeadm kubectl kubernetes-cni
 
 
