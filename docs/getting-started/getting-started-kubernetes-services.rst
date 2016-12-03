@@ -3,16 +3,16 @@ Kubernetes services overview
 
 Refer to `Kubernetes services <http://kubernetes.io/docs/user-guide/services/>`_ for more information 
 
-A Kubernetes Service is an abstraction which defines a logical set of Pods and a policy by which to access them. The set of Pods targeted by a Service is (usually) determined by a Label Selector.
+A Kubernetes *service* is an abstraction which defines a logical set of *pods* and a policy by which to access them. The set of *pods* targeted by a *service* is (usually) determined by a *label selector*.
 
-As an example, consider an image-processing backend which is running with 3 replicas. Those replicas are fungible - frontends do not care which backend they use. While the actual Pods that compose the backend set may change, the frontend clients should not need to be aware of that or keep track of the list of backends themselves. The Service abstraction enables this decoupling.
+As an example, consider an image-processing backend which is running with 3 replicas. Those replicas are fungible - frontends do not care which backend they use. While the actual *pods* that compose the backend set may change, the frontend clients should not need to be aware of that or keep track of the list of backends themselves. The *service* abstraction enables this decoupling.
 
-For Kubernetes-native applications, Kubernetes offers a simple *Endpoints API* that is updated whenever the set of *Pods* in a *Service* changes. For non-native applications, Kubernetes offers a virtual-IP-based bridge to Services which redirects to the backend Pods.
+For Kubernetes-native applications, Kubernetes offers a simple *Endpoints API* that is updated whenever the set of *pods* in a *service* changes. For non-native applications, Kubernetes offers a virtual-IP-based bridge to *services* which redirects to the backend *pods*.
 
 Defining a service
 ------------------
 
-A *Service* in Kubernetes is a REST object, similar to a *Pod*. Like all of the REST objects, a *Service* definition can be *POSTed* to the *apiserver* to create a new instance. For example, suppose you have a set of *Pods* that each expose port 9376 and carry a label *"app=MyApp"*.
+A *service* in Kubernetes is a REST object, similar to a *pod*. Like all of the REST objects, a *service* definition can be *POSTed* to the *apiserver* to create a new instance. For example, suppose you have a set of *pods* that each expose port 9376 and carry a *label* "app=MyApp".
 
 .. code::
 
@@ -36,10 +36,11 @@ A *Service* in Kubernetes is a REST object, similar to a *Pod*. Like all of the 
 	    }
 	}
 
-This specification will create a new *Service* object named "my-service" which targets TCP port 9376 on any Pod with the "app=MyApp" *label*. 
-This *Service* will also be assigned an IP address (sometimes called the *cluster IP*), which is used by the *service proxies* . The *Service’s selector* will be evaluated continuously and the results will be POSTed to an *Endpoints* object also named “my-service”. 
+This specification will create a new *service* object named "my-service" which targets TCP port 9376 on any *pod* with the "app=MyApp" *label*. 
 
-if the service is not a native kubernetes app, then you can do a service definition without the selector field. In such a case you'll have to specify yourself the *endpoints* 
+This *service* will also be assigned an IP address (sometimes called the *cluster IP*), which is used by the *service proxies* . The *service’s selector* will be evaluated continuously and the results will be POSTed to an *Endpoints* object also named “my-service”. 
+
+if the service is not a native kubernetes app, then you can do a service definition without the *selector* field. In such a case you'll have to specify yourself the *endpoints* 
 
 .. code::
 
@@ -78,7 +79,7 @@ if the service is not a native kubernetes app, then you can do a service definit
     	]
 	}
 
-Note that a *Service* can map an incoming port to any *targetPort*. By default the *targetPort* will be set to the same value as the *port* field. In the example above, the port for the service is 80 (HTTP) and will redirect traffic to port 9376 on the Pods
+Note that a *service* can map an incoming port to any *targetPort*. By default the *targetPort* will be set to the same value as the *port* field. In the example above, the port for the service is 80 (HTTP) and will redirect traffic to port 9376 on the Pods
 
 You can specify multiple ports if needed (like HTTP/HTTPS for an app)
 
