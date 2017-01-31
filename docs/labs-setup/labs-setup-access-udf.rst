@@ -12,8 +12,21 @@ Connect to UDF and go to deployment.
 
 Select the relevant blueprint based on your need: 
 
-* If you need a standalone Mesos/Marathon deployment, find the 'Basic cluster - Kubernetes setup lab' blueprint and deploy it
-* if you need a all-in-one deployment, find the 'all-in-one - Kubernetes setup lab'
+* If you need a standalone Kubernetes deployment (1 master, 2 nodes), find the 'Basic cluster - Kuberneteslab' blueprint and deploy it
+* if you need a all-in-one deployment, find the 'all-in-one - Kubernetes lab'
+
+.. warning:: 
+
+   Those blueprints have Kubernetes already deployed. You don't have to do the cluster setup guide or standalone setup guide
+
+==================  ====================  ====================  ============  ====================
+     Hostname           Management IP        Kubernetes IP          Role         Login/Password
+==================  ====================  ====================  ============  ====================
+     Master 1             10.1.1.1            10.1.10.11          Master           root/default
+      node 1              10.1.1.2            10.1.10.21           node            root/default
+      node 2              10.1.1.3            10.1.10.22           nodes           root/default
+      Win7                10.1.1.4            10.1.10.50          Jumpbox            user/user
+==================  ====================  ====================  ============  ====================
 
 Access your environment
 -----------------------
