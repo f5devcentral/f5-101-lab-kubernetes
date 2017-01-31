@@ -12,7 +12,6 @@ Connect to UDF and go to deployment.
 
 Select the relevant blueprint based on your need: 
 
-* If you need a fully available cluste(2 masters in HA) setup, find the 'Cluster - Kubernetes setup lab' blueprint and deploy it.
 * If you need a standalone Mesos/Marathon deployment, find the 'Basic cluster - Kubernetes setup lab' blueprint and deploy it
 * if you need a all-in-one deployment, find the 'all-in-one - Kubernetes setup lab'
 

@@ -13,22 +13,15 @@ In this guide, we will cover different setup:
 	* 1 server that will be master and node (convenient to run kubernetes on your laptop)
 
 
-* fully available cluster:
-
-	* 2 masters (HA will be done via etcd and loadbalancing the apiserver)
-	* 2 nodes
-
-
-Here is the setup of our lab (master2 is only available in the fully available cluster blueprint)
+Here is the setup of our lab 
 
 ==================   ====================  =========================
-Agent                    Management IP         IP for APP Traffic
+Agent                    Management IP         IP for Kubernetes
 ==================   ====================  =========================
-Master 1                 10.1.10.11                    N/A
-Master 2                 10.1.10.12                    N/A
-node 1                   10.1.10.21               10.1.20.21
-node 2                   10.1.10.22               10.1.20.22
-Win7 Jumpbox             10.1.10.50               10.1.20.50
+Master 1                   10.1.1.1               10.1.10.11
+node 1                     10.1.1.2               10.1.10.21
+node 2                     10.1.1.3               10.1.10.22
+Win7 Jumpbox               10.1.1.4               10.1.10.50
 ==================   ====================  =========================
 
 default user (for jumpbox, masters and agents):
@@ -40,26 +33,24 @@ In case you don't use UDF, here are a few things to know that could be useful (i
 
 Here are the different things to take into accounts during this installation guide: 
 
-* We use **Ubuntu xenial* in the UDF blueprints
+* We use *Ubuntu xenial* in the UDF blueprints
 * We updated on all the nodes the /etc/hosts file so that each node is reachable via its name
 
 
 
 ::
 
-	#masters host file
-	user@master1:~$ cat /etc/hosts
+	#master host file
+	$ cat /etc/hosts
 	127.0.0.1       localhost
 	10.1.10.11       master1 master1.my-lab
-	10.1.10.12       master2 master2.my-lab #not available in a basic cluster deployment (no HA master)
 	10.1.10.21       node1  node1.my-lab
 	10.1.10.22       node2  node2.my-lab
 
-	#agents host file
-	user@master1:~$ cat /etc/hosts
+	#nodes host file
+	$ cat /etc/hosts
 	127.0.0.1       localhost
 	10.1.10.1       master1 master1.my-lab
-	10.1.10.2       master2 master2.my-lab #not available in a basic cluster deployment (no HA master)
 	10.1.20.21      node1  node1.my-lab
 	10.1.20.22      node2  node2.my-lab
 
