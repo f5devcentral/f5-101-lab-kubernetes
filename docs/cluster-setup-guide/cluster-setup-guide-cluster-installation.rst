@@ -51,7 +51,7 @@ then install our needed kubernetes packages on **all systems**:
 	apt-get install -y kubelet kubeadm kubectl kubernetes-cni
 	
 
-Limitations:
+Limitations
 -----------
 
 for a full list of the limitations go here: `kubeadm limitations <http://kubernetes.io/docs/getting-started-guides/kubeadm/#limitations>`_

@@ -4,34 +4,6 @@ Node setup
 Once the master is setup and running, we need to connect our *nodes* to it. 
 
 
-Setup Kubelet
--------------
-
-by default kubelet will define its *Node IP* based on its name resolution. If it fails, it will use the first interface. However on a system with multiple interfaces, you may want to force a specific IP to be used. 
-
-to force a specific IP address to be used, you can edit **/etc/systemd/system/kubelet.service.d/10-kubeadm.conf** and edit the following line:
-
-::
-
-	Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin"
-
-add the following arg to it: --node-ip=<IP>
-
-for *node1*, this should look like: 
-
-::
-
-	Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin --node-ip=10.1.20.21"
-
-for *node2*, this should look like:
-
-::
-
-	Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin --node-ip=10.1.20.22"
-
-
-if you want to review all *kubelet* options, you may check this link: `Kubelet <http://kubernetes.io/docs/admin/kubelet/>`_
-
 Join the master
 ---------------
 
@@ -69,7 +41,7 @@ Check that all the services are started as expected (run on the **master**):
 .. image:: ../images/cluster-setup-guide-node-setup-check-services.png
 	:align: center
 
-Here we see that some weave net containers keep restarting. This is due to our multi nic setup. Check this link: `UDeploying Kubernetes 1.4 on Ubuntu Xenial with Kubeadm <https://dickingwithdocker.com/deploying-kubernetes-1-4-on-ubuntu-xenial-with-kubeadm/>`_
+Here we see that some weave net containers keep restarting. This is due to our multi nic setup. Check this link: `Deploying Kubernetes 1.4 on Ubuntu Xenial with Kubeadm <https://dickingwithdocker.com/deploying-kubernetes-1-4-on-ubuntu-xenial-with-kubeadm/>`_
 
 You can validate this by connecting to a node and check the logs for the relevant container
 
@@ -106,6 +78,7 @@ If you want to enable Kubernetes UI, you may install the dashboard. Run the foll
 You should see the following output: 
 
 ::
+	
 	deployment "kubernetes-dashboard" created
 	service "kubernetes-dashboard" created
 
