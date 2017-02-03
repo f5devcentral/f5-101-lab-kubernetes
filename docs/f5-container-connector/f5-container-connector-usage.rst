@@ -25,8 +25,6 @@ to deploy our front-end application, we will need to do the following:
 App Deployment
 --------------
 
-.. Note::
-
 On the **master** we will create all the required files: 
 
 Create a file called my-frontend-deployment.yaml: 
