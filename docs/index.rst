@@ -19,7 +19,7 @@ Contents:
 
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Getting Started
 
    getting-started/getting-started-intro.rst
@@ -28,20 +28,28 @@ Contents:
    getting-started/getting-started-kubernetes-services.rst
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Labs setup
 
    labs-setup/labs-setup.rst
    labs-setup/labs-setup-access-udf.rst
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Cluster setup
 
    cluster-setup-guide/cluster-setup-guide-cluster-installation.rst
    cluster-setup-guide/cluster-setup-guide-master-setup.rst
    cluster-setup-guide/cluster-setup-guide-node-setup.rst
    cluster-setup-guide/cluster-setup-guide-cluster-test.rst
+
+.. toctree::
+   :maxdepth: 2
+   :caption: F5 container connector
+
+   f5-container-connector/f5-container-connector-overview.rst
+   f5-container-connector/f5-container-connector-installation.rst
+
  
 Indices and tables
 ==================

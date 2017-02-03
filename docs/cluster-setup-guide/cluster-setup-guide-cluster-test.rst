@@ -3,7 +3,7 @@ Test our setup
 
 Our environment is setup. We can try our environment by deploying a large application built as micro services
 
-We will use this application: `Micro services demo <https://github.com/microservices-demo/microservices-demo>_`
+We will use this application: `Micro services demo <https://github.com/microservices-demo/microservices-demo>`_
 
 
 Connect to the **master** and run the following command: 
