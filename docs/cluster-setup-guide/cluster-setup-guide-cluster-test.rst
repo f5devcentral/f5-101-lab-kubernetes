@@ -39,9 +39,10 @@ Once all the containers are in a "Running" state, we can try to access our appli
 .. image:: ../images/cluster-setup-guide-test-sock-shop-find-IP.png
 	:align: center
 
-You can now access your application with the following URL: http://<master IP>:<NodePort>
+You can now access your application with the following URL: http://<master IP>:<NodePort> 
 
 .. image:: ../images/cluster-setup-guide-test-sock-shop-access-ui.png
 	:align: center
 
 
+You can also try to access it with the following URL: http://<Node1 IP>:<NodePort> , http://<Node2 IP>:<NodePort> 
