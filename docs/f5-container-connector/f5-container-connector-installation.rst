@@ -55,31 +55,31 @@ On the **master**, create a file called f5-cc-deployment.yaml. Here is its conte
 
 ::
 
-# Sample configuration for f5-k8s-controller. BIG-IP configuration is pulled
-# from the secret store and passed to the controller.
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: f5-k8s-controller
-  namesapce: kube-system
-spec:
-  replicas: 1
-  template:
-    metadata:
-      name: f5-k8s-controller
-      labels:
-        app: f5-k8s-controller
-    spec:
-      containers:
-        - name: f5-k8s-controller
-          # Specify the path to your image here
-          image: "f5networks/f5-ci-beta:f5-k8s-controller-v0.1.0"
-          command: ["/app/bin/f5-k8s-controller"]
-          args: ["--running-in-cluster=true",
-            "--bigip-url=10.1.10.60",
-            "--bigip-username=admin",
-            "--bigip-password=admin"
-          ]
+	# Sample configuration for f5-k8s-controller. BIG-IP configuration is pulled
+	# from the secret store and passed to the controller.
+	apiVersion: extensions/v1beta1
+	kind: Deployment
+	metadata:
+	  name: f5-k8s-controller
+	  namesapce: kube-system
+	spec:
+	  replicas: 1
+	  template:
+	    metadata:
+	      name: f5-k8s-controller
+	      labels:
+	        app: f5-k8s-controller
+	    spec:
+	      containers:
+	        - name: f5-k8s-controller
+	          # Specify the path to your image here
+	          image: "f5networks/f5-ci-beta:f5-k8s-controller-v0.1.0"
+	          command: ["/app/bin/f5-k8s-controller"]
+	          args: ["--running-in-cluster=true",
+	            "--bigip-url=10.1.10.60",
+	            "--bigip-username=admin",
+	            "--bigip-password=admin"
+	          ]
 
 if you setup a registry, you need to update the field *image* with the appropriate path to your image. For your information it is possible to hide the login/password by setting up secret in Kubernetes `Kubernetes secrets <https://kubernetes.io/docs/user-guide/secrets/>`_
 
