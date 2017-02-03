@@ -51,7 +51,9 @@ Once you have loaded the image on *all systems*, check that the image is availab
 
 Now that our container is loaded, we need to define a deployment. `Kubernetes deployments <https://kubernetes.io/docs/user-guide/deployments/>`_
 
-On the **master**, create a file called f5-cc-deployment.yaml. Here is its content:
+On the **master**, we need to setup a deployment file to load our container
+  
+create a file called f5-cc-deployment.yaml. Here is its content:
 
 ::
 
@@ -61,7 +63,7 @@ On the **master**, create a file called f5-cc-deployment.yaml. Here is its conte
 	kind: Deployment
 	metadata:
 	  name: f5-k8s-controller
-	  namesapce: kube-system
+	  namespace: kube-system
 	spec:
 	  replicas: 1
 	  template:
@@ -76,12 +78,58 @@ On the **master**, create a file called f5-cc-deployment.yaml. Here is its conte
 	          image: "f5networks/f5-ci-beta:f5-k8s-controller-v0.1.0"
 	          command: ["/app/bin/f5-k8s-controller"]
 	          args: ["--running-in-cluster=true",
-	            "--bigip-url=10.1.10.60",
+	            "--bigip-url==10.1.10.60",
+	            "--bigip-partition=kubernetes",
 	            "--bigip-username=admin",
 	            "--bigip-password=admin"
 	          ]
 
 if you setup a registry, you need to update the field *image* with the appropriate path to your image. For your information it is possible to hide the login/password by setting up secret in Kubernetes `Kubernetes secrets <https://kubernetes.io/docs/user-guide/secrets/>`_
 
+If you have issues with your yaml and syntax (identation MATTERS), you can try to use an online parser to help you : `Yaml parser <http://www.yamllint.com/>`_
+
+Once you have your yaml file setup, you can try to launch your deployment. It will start our f5-k8s-controller container on one of our node: 
+
+::
+
+	kubectl create -f f5-cc-deployment.yaml
+
+	kubectl get deployment f5-k8s-controller --namespace kube-system
+
+.. image:: ../images/f5-container-connector-launch-deployment-controller.png
+	:align: center
+
+To locate on which node the container connector is running, you can use the following command: 
+
+:: 
+
+	kubectl get pods -o wide -n kube-system
+
+.. image:: ../images/f5-container-connector-locate-controller-container.png
+	:align: center
+
+We can see that our container is running on node1. 
+
+If you need to troubleshoot your container, you'll need to identify on which node it runs and use docker logs command: 
+
+On **node1**: 
+
+:: 
+
+	docker ps 
+
+.. image:: ../images/f5-container-connector-find-dockerID--controller-container.png
+	:align: center
+
+Here we can see our container ID: cfdc826c29fa
+
+Now we can check our container logs: 
+
+:: 
+
+	docker logs cfdc826c29fa
+
+.. image:: ../images/f5-container-connector-check-logs-controller-container.png
+	:align: center
 
 
