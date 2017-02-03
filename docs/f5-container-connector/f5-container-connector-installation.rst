@@ -1,5 +1,5 @@
-Container Connector(CC)
-=======================
+Container Connector(CC) Setup
+=============================
 
 BIG-IP setup
 ------------
@@ -39,7 +39,7 @@ Do the following on **all systems** (in UDF, the CC container archive is in /roo
 .. image:: ../images/f5-container-connector-load-controller-image.png
 	:align: center
 
-Once you have loaded the image on *all systems*, check that the image is available 
+Once you have loaded the image on **all systems**, check that the image is available 
 
 ::
 

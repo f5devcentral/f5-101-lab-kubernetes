@@ -49,6 +49,7 @@ Contents:
 
    f5-container-connector/f5-container-connector-overview.rst
    f5-container-connector/f5-container-connector-installation.rst
+   f5-container-connector/f5-container-connector-usage.rst
 
  
 Indices and tables
