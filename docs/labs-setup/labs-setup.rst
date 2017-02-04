@@ -1,5 +1,5 @@
-Labs setup
-===========
+Labs setup/access
+=================
 
 In this guide, we will cover different setup: 
 
@@ -13,30 +13,24 @@ In this guide, we will cover different setup:
 	* 1 server that will be master and node (convenient to run kubernetes on your laptop)
 
 
-Here is the setup of our lab 
+Here is the setup we will leverage to either create a new environment or to connect to an existing environment
 
-==================   ====================  =========================
-Agent                    Management IP         IP for Kubernetes
-==================   ====================  =========================
-Master 1                   10.1.1.1               10.1.10.11
-node 1                     10.1.1.2               10.1.10.21
-node 2                     10.1.1.3               10.1.10.22
-Win7 Jumpbox               10.1.1.4               10.1.10.50
-==================   ====================  =========================
+==================  ====================  ====================  ============  ====================
+     Hostname           Management IP        Kubernetes IP          Role         Login/Password
+==================  ====================  ====================  ============  ====================
+     Master 1             10.1.1.1            10.1.10.11          Master           root/default
+      node 1              10.1.1.2            10.1.10.21           node            root/default
+      node 2              10.1.1.3            10.1.10.22           nodes           root/default
+      Win7                10.1.1.4            10.1.10.50          Jumpbox            user/user
+==================  ====================  ====================  ============  ====================
 
-default user (for jumpbox, masters and agents):
 
-* login: user
-* password: user
-
-In case you don't use UDF, here are a few things to know that could be useful (if you want to reproduce this in another environment)
+In case you don't use UDF and an existing blueprint, here are a few things to know that could be useful (if you want to reproduce this in another environment)
 
 Here are the different things to take into accounts during this installation guide: 
 
 * We use *Ubuntu xenial* in the UDF blueprints
 * We updated on all the nodes the /etc/hosts file so that each node is reachable via its name
-
-
 
 ::
 

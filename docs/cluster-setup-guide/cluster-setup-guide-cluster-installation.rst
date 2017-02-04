@@ -1,3 +1,5 @@
+.. _my-cluster-setup: 
+
 Cluster installation
 ====================
 
@@ -21,11 +23,10 @@ For ubuntu version earlier than 15, you will need to refer to this process: `Ubu
 
 To install Kubernetes on our ubuntu systems, we will leverage **kubeadm**
 
-Here are the steps that are involved:
+Here are the steps that are involved (detailed later):
 
 1. make sure that firewalld is disabled (not supported today with kubeadm)
 2. disable Apparmor 
-3. add google repo to your environment (**already done in UDF blueprints** see :ref:`source_list`) - on all systems
 3. install docker if not already done (many kubernetes services will run into containers for reliability)
 4. install kubernetes packages
 
