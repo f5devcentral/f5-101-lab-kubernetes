@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# 101 Lab Mesos Marathon documentation build configuration file, created by
+# 101 Lab Kubernetes documentation build configuration file, created by
 # sphinx-quickstart on Wed Oct  5 16:59:50 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -132,7 +132,7 @@ todo_include_todos = False
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = u'101 Lab Mesos Marathon v0.1'
+# html_title = u'101 Lab Kubernetes v0.1'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #

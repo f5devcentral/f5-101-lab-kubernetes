@@ -1,19 +1,20 @@
-Welcome to 101 Lab Mesos Marathon's documentation!
+Welcome to 101 Kubernetes lab's documentation!
 ==================================================
 
 Introduction
 ============
 
-The purpose of this lab is to give you more visibility on 
+#Introduction to Kubernetes and F5 solutions for Kubernetes
 
-* Overview of Mesos and Marathon and their key components
-* Install Mesos and Marathon with 3 masters and 2 agents
-* How to launch application from Marathon
-* How to install Mesos-DNS for service discovery
+The purpose of this lab is to give you more visibility on
 
-If you need just to have a Mesos/Marathon env, you can use the ansible playbooks to do the job. 
+* Overview of Kubernetes and its key components
+* Install Kubernetes in different flavors: All-in-one, One kubernetes Cluster (1 Master and 2 minions), 
+* How to launch application in Kubernetes
+* How to install and use F5 containerized solutions (Container connector, Application Service proxy and F5 kube proxy)
 
-We consider that you have a valid UDF access to do this lab. If not, you may review the pre-requisites about our lab setup .
+We consider that you have a valid UDF access (Private Cloud of F5 Networks) to do this lab. If not, you may review the pre-requisites about our lab setup .
+
 
 Contents:
 
