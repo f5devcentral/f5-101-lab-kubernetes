@@ -5,7 +5,7 @@ Now that our container connector is up and running, let's deploy an application 
 
 if you don't use UDF, you can deploy any application you want. In UDF, the blueprint already has a container called f5-demo-app already loaded as an image (Application provided by Eric Chen - F5 Cloud SA)
 
-you can check this with the command: 
+you can check this with the command (**on the nodes**): 
 
 :: 
 

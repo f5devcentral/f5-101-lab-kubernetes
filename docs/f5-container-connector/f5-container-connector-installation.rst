@@ -78,7 +78,7 @@ create a file called f5-cc-deployment.yaml. Here is its content:
 	          image: "f5networks/f5-ci-beta:f5-k8s-controller-v0.1.0"
 	          command: ["/app/bin/f5-k8s-controller"]
 	          args: ["--running-in-cluster=true",
-	            "--bigip-url==10.1.10.60",
+	            "--bigip-url=10.1.10.60",
 	            "--bigip-partition=kubernetes",
 	            "--bigip-username=admin",
 	            "--bigip-password=admin"
