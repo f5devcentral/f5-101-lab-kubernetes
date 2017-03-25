@@ -1,6 +1,8 @@
 Container Connector(CC) Setup
 =============================
 
+the official CC documentation is here: `Install the F5 Kubernetes BIG-IP Controller <http://clouddocs.f5.com/containers/v1/kubernetes/kctlr-app-install.html>`_
+
 BIG-IP setup
 ------------
 
@@ -8,7 +10,7 @@ To use F5 Container connector, you'll need a BIG-IP up and running first.
 
 In the UDF blueprint, you should have a BIG-IP available at the following URL: https://10.1.10.60
 
-Connect to your BIG-IP and check it is active and licensed. 
+Connect to your BIG-IP and check it is active and licensed. Its login and password are: admin/admin
 
 You need to setup a partition that will be used by CC. 
 
@@ -22,71 +24,73 @@ Once your partition is created, we can go back to Kubernetes to setup the F5 Con
 Container Connector deployment
 ------------------------------
 
-Here we consider you have already retrieved F5 container package. In our example, it is called: f5-k8s-controller-v0.1.0.tar.gz
+Here we consider you have already retrieved the F5 container connector image and loaded it in the environment. **If you use the UDF blueprint it's already loaded in our private registry 10.1.10.11:5000 (10.1.10.11:5000/k8s-bigip-ctlr:v1.0.0)**.
 
-The first thing to do is to load this container in our docker images repository. 
+If you haven't loaded it in your environment, you need to :
 
-Since we haven't setup a docker registry, we will need to load the image on **all systems**. If you want to setup a registry, you can review the process here: `Setup a docker registry <https://docs.docker.com/registry/deploying/>`_
+* load it on **all your systems** with the docker load -i <file_name.tar> 
+* load it on a system and push it into your registry
 
-Do the following on **all systems** (in UDF, the CC container archive is in /root/ - you need to be root or use sudo for docker commands):
 
-::
+Now that our container is loaded, we need to define a deployment: `Kubernetes deployments <https://kubernetes.io/docs/user-guide/deployments/>`_ and create a secret to hide our bigip credentials. `Kubernetes secrets <https://kubernetes.io/docs/user-guide/secrets/>`_
 
-	cd /root/
-	gunzip f5-k8s-controller-v0.1.0.tar.gz
-	docker load -i f5-k8s-controller-v0.1.0.tar
+On the **master**, we need to setup a deployment file to load our container and also setup a secret for our big-ip credentials
 
-.. image:: ../images/f5-container-connector-load-controller-image.png
-	:align: center
-
-Once you have loaded the image on **all systems**, check that the image is available 
+to setup the secret containing your BIG-IP login and password, you can run the following command:
 
 ::
 
-	docker images
+	kubectl create secret generic bigip-login --namespace kube-system --from-literal=username=admin --from-literal=password=admin
 
-.. image:: ../images/f5-container-connector-load-controller-image-check.png
+you should see something like this: 
+
+.. image:: ../images/f5-container-connector-bigip-secret.png
 	:align: center
 
 
-Now that our container is loaded, we need to define a deployment. `Kubernetes deployments <https://kubernetes.io/docs/user-guide/deployments/>`_
-
-On the **master**, we need to setup a deployment file to load our container
-  
 create a file called f5-cc-deployment.yaml. Here is its content:
 
 ::
 
-	# Sample configuration for f5-k8s-controller. BIG-IP configuration is pulled
-	# from the secret store and passed to the controller.
 	apiVersion: extensions/v1beta1
 	kind: Deployment
 	metadata:
-	  name: f5-k8s-controller
+	  name: k8s-bigip-ctlr-deployment
 	  namespace: kube-system
 	spec:
 	  replicas: 1
 	  template:
 	    metadata:
-	      name: f5-k8s-controller
+	      name: k8s-bigip-ctlr
 	      labels:
-	        app: f5-k8s-controller
+	        app: k8s-bigip-ctlr
 	    spec:
 	      containers:
-	        - name: f5-k8s-controller
-	          # Specify the path to your image here
-	          image: "f5networks/f5-ci-beta:f5-k8s-controller-v0.1.0"
-	          command: ["/app/bin/f5-k8s-controller"]
-	          args: ["--running-in-cluster=true",
+	        - name: k8s-bigip-ctlr
+	          image: "10.1.10.11:5000/k8s-bigip-ctlr:v1.0.0"
+	          env:
+	            - name: BIGIP_USERNAME
+	              valueFrom:
+	                secretKeyRef:
+	                  name: bigip-login
+	                  key: username
+	            - name: BIGIP_PASSWORD
+	              valueFrom:
+	                secretKeyRef:
+	                  name: bigip-login
+	                  key: password
+	          command: ["/app/bin/k8s-bigip-ctlr"]
+	          args: [
+	            "--bigip-username=$(BIGIP_USERNAME)",
+	            "--bigip-password=$(BIGIP_PASSWORD)",
 	            "--bigip-url=10.1.10.60",
 	            "--bigip-partition=kubernetes",
-	            "--bigip-username=admin",
-	            "--bigip-password=admin"
+	            "--namespace=default",
 	          ]
 
-if you setup a registry, you need to update the field *image* with the appropriate path to your image. For your information it is possible to hide the login/password by setting up secret in Kubernetes `Kubernetes secrets <https://kubernetes.io/docs/user-guide/secrets/>`_
+if you don't use the UDF blueprint, you need to update the field *image* with the appropriate path to your image. 
 
-If you have issues with your yaml and syntax (identation MATTERS), you can try to use an online parser to help you : `Yaml parser <http://www.yamllint.com/>`_
+If you have issues with your yaml and syntax (**identation MATTERS**), you can try to use an online parser to help you : `Yaml parser <http://www.yamllint.com/>`_
 
 Once you have your yaml file setup, you can try to launch your deployment. It will start our f5-k8s-controller container on one of our node: 
 
@@ -99,7 +103,7 @@ Once you have your yaml file setup, you can try to launch your deployment. It wi
 .. image:: ../images/f5-container-connector-launch-deployment-controller.png
 	:align: center
 
-To locate on which node the container connector is running, you can use the following command: 
+FYI, To locate on which node the container connector is running, you can use the following command: 
 
 :: 
 
@@ -112,7 +116,7 @@ We can see that our container is running on node1.
 
 If you need to troubleshoot your container, you'll need to identify on which node it runs and use docker logs command: 
 
-On **node1**: 
+On **node1** (or another node depending on the previous command): 
 
 :: 
 

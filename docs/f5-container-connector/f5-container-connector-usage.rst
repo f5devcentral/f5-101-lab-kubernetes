@@ -3,20 +3,9 @@ Container Connector Usage
 
 Now that our container connector is up and running, let's deploy an application and leverage our CC. 
 
-if you don't use UDF, you can deploy any application you want. In UDF, the blueprint already has a container called f5-demo-app already loaded as an image (Application provided by Eric Chen - F5 Cloud SA)
+if you don't use UDF, you can deploy any application you want. In UDF, the blueprint already has a container called f5-demo-app already loaded as an image (Application provided by Eric Chen - F5 Cloud SA). It is loaded in our container registry 10.1.10.11:5000/f5-demo-app
 
-you can check this with the command (**on the nodes**): 
-
-:: 
-
-	docker images
-
-
-.. image:: ../images/f5-container-connector-check-F5demoapp-container.png
-	:align: center
-
-
-to deploy our front-end application, we will need to do the following:
+To deploy our front-end application, we will need to do the following:
 
 * Define a deployment: this will launch our application running in a container
 * Define a ConfigMap: ConfigMap can be used to store fine-grained information like individual properties or coarse-grained information like entire config files or JSON blobs. It will contain the BIG-IP configuration we need to push
@@ -43,7 +32,7 @@ Create a file called my-frontend-deployment.yaml:
 	        run: my-frontend
 	    spec:
 	      containers:
-	      - image: f5-demo-app:latest
+	      - image: "10.1.10.11:5000/f5-demo-app"
 	        env:
 	        - name: F5DEMO_APP
 	          value: "frontend"
@@ -67,7 +56,7 @@ Create a file called my-frontend-configmap.yaml:
 	  labels:
 	    f5type: virtual-server
 	data:
-	  schema: "f5schemadb://bigip-virtual-server_v0.1.0.json"
+	  schema: "f5schemadb://bigip-virtual-server_v0.1.2.json"
 	  data: |-
 	    {
 	      "virtualServer": {
