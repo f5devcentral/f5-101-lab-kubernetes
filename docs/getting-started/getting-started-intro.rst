@@ -4,9 +4,9 @@ Introduction
 The purpose of this lab is to give you more visibility on
 
 * Overview of Kubernetes and its key components
-* Install Kubernetes in different flavors: All-in-one, One kubernetes Cluster (1 Master and 2 nodes)
+* How to install Kubernetes on Ubuntu 
 * How to launch application in Kubernetes
 * How to install and use F5 containerized solutions (Container connector, Application Service proxy and F5 kube proxy)
 
-We consider that you have a valid UDF access (Private Cloud of F5 Networks) to do this lab. If not, you may review the pre-requisites about our lab setup .
+To focus on the F5 components, you have the opportunity to leverage an existing environment. To do so, we consider that you have a valid UDF access (Private Cloud of F5 Networks) to do this lab. If not, you may review the pre-requisites about our lab setup to build your own. 
 

@@ -11,9 +11,9 @@ As a reminder, in this example, this is our cluster setup:
 ==================  ====================  ====================  ============
      Hostname           Management IP        Kubernetes IP          Role
 ==================  ====================  ====================  ============
-     Master 1             10.1.1.1            10.1.10.11          Master
-      node 1              10.1.1.2            10.1.10.21           node
-      node 2              10.1.1.3            10.1.10.22           node
+     Master 1             10.1.1.4            10.1.10.11          Master
+      node 1              10.1.1.5            10.1.10.21           node
+      node 2              10.1.1.6            10.1.10.22           node
 ==================  ====================  ====================  ============
 
 
@@ -36,8 +36,28 @@ to make sure the systems are up to date, run this command on **all systems**:
 
 	sudo apt-get update && sudo apt-get upgrade -y
 
+.. warning::
+
+	Make sure that your /etc/hosts files on master and nodes resolve your hostnames with 10.1.10.X IPs
+
 installation
 -------------
+
+You need **root privileges** for this section, either use sudo or su to gain the required privileges. 
+
+you need to give access to the kubernetes packages to your systems, do this on **all systems**:
+
+::
+
+	apt-get update && apt-get install -y apt-transport-https
+
+	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+	
+	cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
+	deb http://apt.kubernetes.io/ kubernetes-xenial main
+	EOF
+
+	apt-get update
 
 once this is done, install docker if not already done on **all systems**:
 

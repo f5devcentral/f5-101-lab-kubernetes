@@ -1,42 +1,16 @@
 F5 ASP and kube-proxy Deployment
 ================================
 
-To use ASP, we will need to add a Application Services Proxy Instance to Every Node
+To use ASP, we will need to add a Application Services Proxy(ASP) Instance to Every Node
 
 Every node in the cluster need to run an instance of ASP. The steps below demonstrate how to use a Kubernetes ConfigMap and DaemonSet to run one Application Services Proxy per node and apply the same configurations to each ASP instance.
 
-The DaemonSet ensures one Application Services Proxy runs per node in the Kubernetes cluster. The ConfigMap contains the configurations you want to apply to each LWP instance.
+The DaemonSet ensures one Application Services Proxy runs per node in the Kubernetes cluster. The ConfigMap contains the configurations you want to apply to each ASP instance.
 
-The first step will be to load the relevant F5 container images into our system. 
+The first step will be to load the relevant F5 container images into our system. if you use the UDF blueprint, it's already done in our private registry (10.1.10.11:5000)
 
-Load images
------------
+the official F5 ASP documentation is here: `Install the F5 Kubernetes Application Service Proxy <http://clouddocs.f5.com/containers/v1/kubernetes/asp-install-k8s.html>`_  and `Deploy the F5 Application Service Proxy with the F5 Kubernetes Prox <http://clouddocs.f5.com/containers/v1/kubernetes/asp-k-deploy.html>`_ 
 
-We need to deploy a ASP instance on every node. Please do the following steps on **all systems** (because we don't use a docker registry)
-
-::
-
-	cd /root/
-
-	gunzip f5-kube-proxy-v1.3.7_f5.1.tar.gz
-
-	gunzip light-weight-proxy-v0.2.0.tar.gz
-
-	docker load -i light-weight-proxy-v0.2.0.tar
-
-	docker load -i f5-kube-proxy-v1.3.7_f5.1.tar
-
-Once you have loaded the images in docker, you may ensure it got loaded properly by running the following command: 
-
-::
-
-	docker images
-
-
-.. image:: ../images/f5-asp-and-kube-proxy-load-f5-containers.png
-	:align: center
-
-Now that our images are loaded, we can deploy the ASP image
 
 Deploy ASP 
 ----------
@@ -56,10 +30,10 @@ create a yaml file called *f5-asp-configmap.yaml* and here is the content to cop
 	kind: ConfigMap
 	apiVersion: v1
 	metadata:
-	  name: lwp-config
+	  name: f5-asp-config
 	  namespace: kube-system
 	data:
-	  lightweight-proxy.config.json: |-
+	  asp.config.json: |-
 	    {
 	      "global": {
 	        "console-log-level": "info"
@@ -81,36 +55,44 @@ Once the configmap file is done, we can setup the daemonset file. Create a file 
 	apiVersion: extensions/v1beta1
 	kind: DaemonSet
 	metadata:
-	  name: lightweight-proxy
+	  name: f5-asp
 	  namespace: kube-system
 	spec:
 	  template:
 	    metadata:
 	      labels:
-	        name: lightweight-proxy
+	        name: f5-asp
 	    spec:
 	      hostNetwork: true
-	      containers:
-	        - name: proxy-plugin
-	          image: f5networks/f5-ci-beta:light-weight-proxy-v0.2.0
-	          args:
-	            - --config-file
-	            - /etc/configmap/lightweight-proxy.config.json
-	          securityContext:
-	            privileged: false
-	          volumeMounts:
-	          - mountPath: /var/run/kubernetes/proxy-plugin
-	            name: plugin-config
-	            readOnly: true
-	          - mountPath: /etc/configmap
-	            name: lwp-config
-	      volumes:
-	        - name: plugin-config
-	          hostPath:
-	            path: /var/run/kubernetes/proxy-plugin
-	        - name: lwp-config
-	          configMap:
-	            name: lwp-config
+	      template:
+	        containers:
+	          - name: f5-asp
+	            image: "10.1.10.11:5000/asp:v1.0.0"
+	            args:
+	              # the config file is loaded from the ConfigMap; it contains the
+	              # ASP global config
+	              - --config-file
+	              - /etc/configmap/asp.config.json
+	            securityContext:
+	              privileged: false
+	            volumeMounts:
+	            # mount a new directory
+	            - name: plugin-config
+	              # the path the directory will be added to; do not change
+	              mountPath: /var/run/kubernetes/proxy-plugin
+	              readOnly: true
+	            # mount a new directory
+	            - name: asp-config
+	              # the path the directory will be added to; do not change
+	              mountPath: /etc/configmap
+	        volumes:
+	          - name: plugin-config
+	            hostPath:
+	              path: /var/run/kubernetes/proxy-plugin
+	          - name: asp-config
+	            # replace with name of your ASP ConfigMap
+	            configMap:
+	              name: f5-asp-config
 
 
 Once our files are created, we can use them to create the relevant ConfigMap and Daemonset to start our ASP instances. 
@@ -123,7 +105,7 @@ On the **master**, run the following commands:
 
 	kubectl create -f f5-asp-daemonset.yaml
 
-Here the ASP should be deployed automatically. You should have as many ASP instances launched as nodes you have in your kubernetes cluster (in the UDF blueprint, it's three - 3). You can validate this with the following commands: 
+Here the ASP should be deployed automatically. You should have as many ASP instances launched as kubernetes systems you have in your kubernetes cluster (in the UDF blueprint, it's three - 3). You can validate this with the following commands: 
 
 ::
 
@@ -210,7 +192,7 @@ Here is the content of the file, copy/paste it.
 	      - command:
 	        - /proxy
 	        - --kubeconfig=/run/kubeconfig
-	        image: f5networks/f5-ci-beta:f5-kube-proxy-v1.3.7_f5.1
+	        image: 10.1.10.11:5000/f5-kube-proxy:v1.0.0
 	        imagePullPolicy: IfNotPresent
 	        name: kube-proxy
 	        resources: {}
