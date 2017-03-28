@@ -98,8 +98,8 @@ Create a file called my-frontend-service.yaml:
 .. Note::
 
 	If you use UDF, you have templates you can use in your jumpbox. It's on the Desktop > F5 > kubernetes-demo folder. If you use those files, you'll need to :
-	* Update the container image path in the deployment file
-	* Update the "bindAddr" in the configMap for an IP you can use in this blueprint. 
+	* check the container image path in the deployment file is accurate
+	* Update the "bindAddr" in the configMap for an IP you want to use in this blueprint. 
 
 We can now launch our application : 
 

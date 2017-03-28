@@ -108,6 +108,12 @@ create a file called f5-cc-deployment.yaml. Here is its content:
 	            "--namespace=default",
 	          ]
 
+.. Note::
+
+	If you use UDF, you have templates you can use in your jumpbox. It's on the Desktop > F5 > kubernetes-demo folder. If you use those files, you'll need to :
+	* check the container image path in the deployment file is accurate
+	* Update the "bindAddr" in the configMap for an IP you want to use in this blueprint. 
+
 if you don't use the UDF blueprint, you need to update the field *image* with the appropriate path to your image. 
 
 If you have issues with your yaml and syntax (**identation MATTERS**), you can try to use an online parser to help you : `Yaml parser <http://www.yamllint.com/>`_
