@@ -63,10 +63,3 @@ Contents:
    cluster-setup-guide/cluster-setup-guide-cluster-test.rst
 
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
