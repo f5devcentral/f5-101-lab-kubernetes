@@ -1,4 +1,4 @@
-Welcome to 101 Kubernetes lab's documentation!
+Welcome to F5 101 Kubernetes lab's documentation!
 ==================================================
 
 Introduction
@@ -37,15 +37,6 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-   :caption: Cluster setup
-
-   cluster-setup-guide/cluster-setup-guide-cluster-installation.rst
-   cluster-setup-guide/cluster-setup-guide-master-setup.rst
-   cluster-setup-guide/cluster-setup-guide-node-setup.rst
-   cluster-setup-guide/cluster-setup-guide-cluster-test.rst
-
-.. toctree::
-   :maxdepth: 2
    :caption: F5 container connector
 
    f5-container-connector/f5-container-connector-overview.rst
@@ -61,10 +52,14 @@ Contents:
    f5-asp-and-f5-kube-proxy/f5-asp-and-kube-proxy-test.rst
 
  
-Indices and tables
-==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. toctree::
+   :maxdepth: 2
+   :caption: Cluster setup
+
+   cluster-setup-guide/cluster-setup-guide-cluster-installation.rst
+   cluster-setup-guide/cluster-setup-guide-master-setup.rst
+   cluster-setup-guide/cluster-setup-guide-node-setup.rst
+   cluster-setup-guide/cluster-setup-guide-cluster-test.rst
+
 

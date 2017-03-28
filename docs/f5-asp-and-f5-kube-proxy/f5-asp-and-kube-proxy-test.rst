@@ -26,17 +26,18 @@ Create a file called *my-backend-deployment.yaml*. Here is its content:
       metadata:
         labels:
          run: my-backend
-     spec:
-       containers:
-       - image: f5-demo-app:latest
-         imagePullPolicy: IfNotPresent
-         env:
-         - name: F5DEMO_APP
-           value: "backend"
-         name: my-backend
-         ports:
-         - containerPort: 80
-           protocol: TCP
+      spec:
+        containers:
+        - image: 10.1.10.11:5000/f5-demo-app
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: F5DEMO_APP
+            value: "backend"
+          name: my-backend
+          ports:
+          - containerPort: 80
+            protocol: TCP
+
 
 
 Create another file called *my-backend-service.yaml*. Here is its content: 
@@ -47,15 +48,15 @@ Create another file called *my-backend-service.yaml*. Here is its content:
   kind: Service
   metadata:
     annotations:
-      lwp.f5.com/config.http: |-
-        {
-          "ip-protocol": "http",
-          "load-balancing-mode": "round-robin",
-          "flags" : {
-            "x-forwarded-for": true,
-            "x-served-by": true
-          }
-       }
+      asp.f5.com/config: |
+         {
+            "ip-protocol": "http",
+           "load-balancing-mode": "round-robin",
+           "flags" : {
+             "x-forwarded-for": true,
+             "x-served-by": true
+           }
+         }
     name: my-backend
     labels:
       run: my-backend
@@ -67,6 +68,7 @@ Create another file called *my-backend-service.yaml*. Here is its content:
       targetPort: 80
     selector:
       run: my-backend
+
 
 Once our files are created, we can deploy our backend application with the following commands: 
 

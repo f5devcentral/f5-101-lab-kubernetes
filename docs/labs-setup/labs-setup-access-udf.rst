@@ -14,12 +14,12 @@ Create your environment
 If you want to setup your own kubernetes environment, you need to create your own deployment reflecting what has been explained in the previous section. Please go to the Cluster setup guide to do this: :ref:`my-cluster-setup`
 
 
-Start your environment
-----------------------
+Start your UDF environment
+--------------------------
 
 Connect to UDF and go to deployment. 
 
-Select the relevant blueprint based on your need: A standalone Kubernetes deployment (1 master, 2 nodes), find the '[Kubernetes] how to setup ASP and CC (Velcro)' blueprint and deploy it
+Select the relevant blueprint based on your need: A standalone Kubernetes deployment (1 master, 2 nodes), find the *[Kubernetes] how to setup ASP and CC* blueprint and deploy it
 
 
 .. warning:: 
@@ -28,14 +28,16 @@ Select the relevant blueprint based on your need: A standalone Kubernetes deploy
 
 ==================  ====================  ====================  ============  =============================================
      Hostname           Management IP        Kubernetes IP          Role                 Login/Password
-==================  ====================  ====================  ============  ============================================
+==================  ====================  ====================  ============  =============================================
      Master 1             10.1.1.4            10.1.10.11          Master       ssh: ubuntu/<your key> - su : root/default           
       node 1              10.1.1.5            10.1.10.21           node        ssh: ubuntu/<your key> - su : root/default
       node 2              10.1.1.6            10.1.10.22           node        ssh: ubuntu/<your key> - su : root/default
      Windows                10.1.1.7            10.1.10.50        Jumpbox            administrator / &NUyBADsdo
 ==================  ====================  ====================  ============  =============================================
 
-There is also a docker registry available to centralize our images. it's accessible via 10.1.10.11:5000
+.. note::
+
+  There is also a docker registry available to centralize our docker images. it's accessible via 10.1.10.11:5000
 
 Access your environment
 -----------------------
@@ -46,7 +48,7 @@ If you deployed the existing blueprint mentioned above; Once your environment is
    :scale: 50%
    :align: center
 
-Click on the shortcut that got downloaded and it should open your RDP session. The credentials to use are administrator/&NUyBADsdo.
+Click on the shortcut that got downloaded and it should open your RDP session. The credentials to use are **administrator/&NUyBADsdo**
 
 *If you have trouble reading the text please see optional directions for changing text size in the Appendix.*
 

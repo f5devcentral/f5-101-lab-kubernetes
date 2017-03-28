@@ -1,9 +1,9 @@
-#Introduction to Kubernetes
+#Introduction to F5 solution for Kubernetes
 
 The purpose of this lab is to give you more visibility on
 
 * Overview of Kubernetes and its key components
-* Install Kubernetes in different flavors: All-in-one, One kubernetes Cluster (1 Master and 2 minions), 
+* Install a Kubernetes Cluster (1 Master and 2 nodes)
 * How to launch application in Kubernetes
 * How to install and use F5 containerized solutions (Container connector, Application Service proxy and F5 kube proxy)
 

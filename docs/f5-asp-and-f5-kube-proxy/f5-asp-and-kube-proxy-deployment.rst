@@ -64,35 +64,27 @@ Once the configmap file is done, we can setup the daemonset file. Create a file 
 	        name: f5-asp
 	    spec:
 	      hostNetwork: true
-	      template:
-	        containers:
-	          - name: f5-asp
-	            image: "10.1.10.11:5000/asp:v1.0.0"
-	            args:
-	              # the config file is loaded from the ConfigMap; it contains the
-	              # ASP global config
-	              - --config-file
-	              - /etc/configmap/asp.config.json
-	            securityContext:
-	              privileged: false
-	            volumeMounts:
-	            # mount a new directory
-	            - name: plugin-config
-	              # the path the directory will be added to; do not change
-	              mountPath: /var/run/kubernetes/proxy-plugin
-	              readOnly: true
-	            # mount a new directory
-	            - name: asp-config
-	              # the path the directory will be added to; do not change
-	              mountPath: /etc/configmap
-	        volumes:
-	          - name: plugin-config
-	            hostPath:
-	              path: /var/run/kubernetes/proxy-plugin
-	          - name: asp-config
-	            # replace with name of your ASP ConfigMap
-	            configMap:
-	              name: f5-asp-config
+	      containers:
+	        - name: proxy-plugin
+	          image: "10.1.10.11:5000/asp:v1.0.0"
+	          args:
+	            - --config-file
+	            - /etc/configmap/asp.config.json
+	          securityContext:
+	            privileged: false
+	          volumeMounts:
+	          - mountPath: /var/run/kubernetes/proxy-plugin
+	            name: plugin-config
+	            readOnly: true
+	          - mountPath: /etc/configmap
+	            name: asp-config
+	      volumes:
+	        - name: plugin-config
+	          hostPath:
+	            path: /var/run/kubernetes/proxy-plugin
+	        - name: asp-config
+	          configMap:
+	            name: f5-asp-config
 
 
 Once our files are created, we can use them to create the relevant ConfigMap and Daemonset to start our ASP instances. 
