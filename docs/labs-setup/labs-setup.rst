@@ -9,7 +9,7 @@ In this section, we will cover our setup:
 	* 2 nodes
 
 
-Here is the setup we will leverage to either create a new environment or to connect to an existing environment (F5 UDF)
+Here is the setup we will leverage to either create a new environment or to connect to an existing environment (F5 UDF - Blueprint called *[Kubernetes] how to setup ASP and CC* )
 
 In the existing environment, here is the setup you'll get: 
 
