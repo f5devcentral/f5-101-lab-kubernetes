@@ -125,8 +125,12 @@ to check the status of our deployment, you can run the following commands:
 
 .. image:: ../images/f5-container-connector-check-app-definition.png
 	:align: center
+	:scale: 50%
 
-Here you need to pay attention to the NodePort value. That is the port used by Kubernetes to give you access to the app from the outside
+Here you need to pay attention to:
+
+	* the NodePort value. That is the port used by Kubernetes to give you access to the app from the outside. Here it's 32402
+	* the endpoints. That's our 2 instances (defined as replicas in our deployment file) and the port assigned to the service: port 80
 
 Now that we have deployed our application sucessfully, we can check our BIG-IP configuration. 
 
@@ -140,6 +144,7 @@ Now that we have deployed our application sucessfully, we can check our BIG-IP c
 
 .. image:: ../images/f5-container-connector-check-app-bigipconfig2.png
 	:align: center
+	:scale: 50%
 
 
 Here you can see that the pool members listed are all the kubernetes nodes. 
@@ -148,12 +153,25 @@ Now you can try to access your application via your BIG-IP VIP: 10.1.10.80:
 
 .. image:: ../images/f5-container-connector-access-app.png
 	:align: center
+	:scale: 50%
 
-Hit Refresh many times and you should see:
-
-* the Server IP changing, here it is 10.40.0.2 and 10.40.0.3. 
-
-* on your **BIG-IP**, go to Local Traffic > Pools > Pool list > my-frontend_10.1.10.80_80 > Statistics to see that traffic is distributed as expected
+Hit Refresh many times and go to your **BIG-IP** UI, go to Local Traffic > Pools > Pool list > my-frontend_10.1.10.80_80 > Statistics to see that traffic is distributed as expected
   
  .. image:: ../images/f5-container-connector-check-app-bigip-stats.png
  	:align: center
+ 	:scale: 50%
+
+ How does traffic is forwarded in Kubernetes from the <node IP>:32402 to the <container IP>:80 ? This is done via iptables that is managed via the kube-proxy instances:
+
+ On **any nodes** (master/nodes), run the following command: 
+
+ :: 
+
+ 	 sudo iptables-save | grep my-frontend
+
+ This will list you the different iptables rules that were created regarding our frontend service. 
+
+ .. image:: ../images/f5-container-connector-list-frontend-iptables.png
+ 	:align: center
+ 	:scale: 50%
+
