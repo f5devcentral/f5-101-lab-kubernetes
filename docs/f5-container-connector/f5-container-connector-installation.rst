@@ -36,7 +36,7 @@ Here we consider you have already retrieved the F5 container connector image and
 
 .. note::
 
-	If you use the UDF blueprint it's already loaded in our private registry 10.1.10.11:5000 (10.1.10.11:5000/k8s-bigip-ctlr:v1.0.0)**.
+	If you use the UDF blueprint it's already loaded in our private registry 10.1.10.11:5000 (10.1.10.11:5000/k8s-bigip-ctlr:v1.0.0).
 
 If you haven't loaded it in your environment, you have two choices :
 
@@ -111,14 +111,15 @@ create a file called f5-cc-deployment.yaml. Here is its content:
 .. Note::
 
 	If you use UDF, you have templates you can use in your jumpbox. It's on the Desktop > F5 > kubernetes-demo folder. If you use those files, you'll need to :
-	* check the container image path in the deployment file is accurate
-	* Update the "bindAddr" in the configMap for an IP you want to use in this blueprint. 
+
+		* check the container image path in the deployment file is accurate
+		* Update the "bindAddr" in the configMap for an IP you want to use in this blueprint. 
 
 if you don't use the UDF blueprint, you need to update the field *image* with the appropriate path to your image. 
 
 If you have issues with your yaml and syntax (**identation MATTERS**), you can try to use an online parser to help you : `Yaml parser <http://www.yamllint.com/>`_
 
-Once you have your yaml file setup, you can try to launch your deployment. It will start our f5-k8s-controller container on one of our node: 
+Once you have your yaml file setup, you can try to launch your deployment. It will start our f5-k8s-controller container on one of our node (may take around 30sec to be in a running state): 
 
 ::
 
@@ -187,3 +188,5 @@ You can connect to your container with kubectl also:
 	 cd /app
 
 	 ls -lR
+
+	 exit
