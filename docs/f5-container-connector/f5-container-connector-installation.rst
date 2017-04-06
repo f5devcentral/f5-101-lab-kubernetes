@@ -117,7 +117,7 @@ create a file called f5-cc-deployment.yaml. Here is its content:
 
 if you don't use the UDF blueprint, you need to update the field *image* with the appropriate path to your image. 
 
-If you have issues with your yaml and syntax (**identation MATTERS**), you can try to use an online parser to help you : `Yaml parser <http://www.yamllint.com/>`_
+If you have issues with your yaml and syntax (**identation MATTERS**), you can try to use an online parser to help you : `Yaml parser <http://codebeautify.org/yaml-validator>`_
 
 Once you have your yaml file setup, you can try to launch your deployment. It will start our f5-k8s-controller container on one of our node (may take around 30sec to be in a running state): 
 
