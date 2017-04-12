@@ -12,7 +12,7 @@ to setup **master** as a Kubernetes *master*, run the following command:
 
 ::
 
-	kubeadm init --api-advertise-addresses=10.1.10.11
+	kubeadm init --api-advertise-address=10.1.10.11
 
 Here we specify:
 
