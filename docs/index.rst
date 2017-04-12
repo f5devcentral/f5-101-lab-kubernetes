@@ -34,6 +34,7 @@ Contents:
 
    labs-setup/labs-setup.rst
    labs-setup/labs-setup-access-udf.rst
+   labs-setup/labs-setup-automated-deploy.rst
 
 .. toctree::
    :maxdepth: 2
