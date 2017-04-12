@@ -162,7 +162,7 @@ On **ip-10-1-1-5** which is Node1 (or another node depending on the previous com
 
 :: 
 
-	docker ps 
+	sudo docker ps 
 
 .. image:: ../images/f5-container-connector-find-dockerID--controller-container.png
 	:align: center
@@ -173,7 +173,7 @@ Now we can check our container logs:
 
 :: 
 
-	docker logs 7a774293230b 
+	sudo docker logs 7a774293230b 
 
 .. image:: ../images/f5-container-connector-check-logs-controller-container.png
 	:align: center
