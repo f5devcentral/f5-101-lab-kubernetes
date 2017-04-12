@@ -5,7 +5,11 @@ This is only available for users having access to F5 UDF. You need to use the bl
 
 You may just need to have access to a kubernetes environment with F5 solutions already deployed on top of it (customer demo, troubleshooting, testing). 
 
-If this is the case, you just leverage a script to automatically deploy everything mentioned in the later sections:
+.. warning:: 
+
+	Connect to your BIG-IP and relicense it. You need a basic LTM license, nothing specific. The BIG-IP must be licensed and active before running the script. 
+
+If this is the case, you can just leverage a script to automatically deploy everything mentioned in the later sections:
 
 * F5 container connector
 * F5 ASP and kube-proxy
