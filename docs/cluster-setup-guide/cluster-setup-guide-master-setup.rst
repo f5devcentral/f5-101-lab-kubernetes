@@ -12,7 +12,7 @@ to setup **master** as a Kubernetes *master*, run the following command:
 
 ::
 
-	kubeadm init --api-advertise-address=10.1.10.11
+	sudo kubeadm init --api-advertise-addresses=10.1.10.11
 
 Here we specify:
 
@@ -29,7 +29,7 @@ you should see a line like this:
 
 ::
 
-	kubeadm join --token=62468f.9dfb3fc97a985cf9 10.1.10.11
+	sudo kubeadm join --token=62468f.9dfb3fc97a985cf9 10.1.10.11
 
 
 This is the command to run on the node so that it registers itself with the master. Keep the secret safe since anyone with this token can add authenticated node to your cluster. This is used for mutual auth between the master and the nodes

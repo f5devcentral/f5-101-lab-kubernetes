@@ -11,7 +11,7 @@ to join the master we need to run the command highlighted during the master init
 
 ::
 
-	kkubeadm join --token=62468f.9dfb3fc97a985cf9 10.1.10.11
+	sudo kubeadm join --token=62468f.9dfb3fc97a985cf9 10.1.10.11
 
 
 the output should be like this :
@@ -52,7 +52,7 @@ to fix this, you need to run the following command on the **master**:
 
 ::
 
-	apt-get install -y jq
+	sudo apt-get install -y jq
 
 	kubectl -n kube-system get ds -l 'component=kube-proxy' -o json | jq '.items[0].spec.template.spec.containers[0].command |= .+ ["--cluster-cidr=10.32.0.0/12"]' | kubectl apply -f - && kubectl -n kube-system delete pods -l 'component=kube-proxy'
 
