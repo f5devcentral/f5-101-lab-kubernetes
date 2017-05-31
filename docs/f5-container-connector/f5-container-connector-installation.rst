@@ -80,33 +80,36 @@ create a file called f5-cc-deployment.yaml. Here is its content:
 	spec:
 	  replicas: 1
 	  template:
-	    metadata:
-	      name: k8s-bigip-ctlr
-	      labels:
-	        app: k8s-bigip-ctlr
-	    spec:
-	      containers:
-	        - name: k8s-bigip-ctlr
-	          image: "10.1.10.11:5000/k8s-bigip-ctlr:v1.0.0"
-	          env:
-	            - name: BIGIP_USERNAME
-	              valueFrom:
-	                secretKeyRef:
-	                  name: bigip-login
-	                  key: username
-	            - name: BIGIP_PASSWORD
-	              valueFrom:
-	                secretKeyRef:
-	                  name: bigip-login
-	                  key: password
-	          command: ["/app/bin/k8s-bigip-ctlr"]
-	          args: [
-	            "--bigip-username=$(BIGIP_USERNAME)",
-	            "--bigip-password=$(BIGIP_PASSWORD)",
-	            "--bigip-url=10.1.10.60",
-	            "--bigip-partition=kubernetes",
-	            "--namespace=default",
-	          ]
+		metadata:
+		  name: k8s-bigip-ctlr
+		  labels:
+			app: k8s-bigip-ctlr
+		spec:
+		  containers:
+			- name: k8s-bigip-ctlr
+			  image: "f5networks/k8s-bigip-ctlr:1.1.0-beta.1"
+			  imagePullPolicy: IfNotPresent
+			  env:
+				- name: BIGIP_USERNAME
+				  valueFrom:
+					secretKeyRef:
+					  name: bigip-login
+					  key: username
+				- name: BIGIP_PASSWORD
+				  valueFrom:
+					secretKeyRef:
+					  name: bigip-login
+					  key: password
+			  command: ["/app/bin/k8s-bigip-ctlr"]
+			  args: [
+				"--bigip-username=$(BIGIP_USERNAME)",
+				"--bigip-password=$(BIGIP_PASSWORD)",
+				"--bigip-url=10.1.10.60",
+				"--bigip-partition=kubernetes",
+				"--namespace=default",
+				"--pool-member-type=cluster",
+			  ]
+
 
 .. Note::
 
