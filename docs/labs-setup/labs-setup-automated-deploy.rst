@@ -1,13 +1,9 @@
-Automated F5 solutions deployment
-=================================
+Automated F5 solutions deployment via CLI
+=========================================
 
 This is only available for users having access to F5 UDF. You need to use the blueprint called *[Kubernetes] how to setup ASP and CC*
 
 You may just need to have access to a kubernetes environment with F5 solutions already deployed on top of it (customer demo, troubleshooting, testing). 
-
-.. warning:: 
-
-	Connect to your BIG-IP and relicense it. You need a basic LTM license, nothing specific. The BIG-IP must be licensed and active before running the script. 
 
 If this is the case, you can just leverage a script to automatically deploy everything mentioned in the later sections:
 
@@ -47,3 +43,35 @@ Once all the containers are in a running state, you can try to access the Fronte
 	* Sometimes a kube discovery service may be in an error state. It shouldn't create any issue in the lab
 	* If you access the BIG-IP to check its configuration, the setup is done in the *kubernetes* partition 
 
+Automated F5 solutions deployment via Jenkins
+=============================================
+
+This is only available for users having access to F5 UDF. You need to use the blueprint called *[Kubernetes] how to setup ASP and CC*
+
+You may just need to have access to a kubernetes environment with F5 solutions already deployed on top of it (customer demo, troubleshooting, testing). 
+
+The following will perform the same steps as the previous CLI example, but use Jenkins as the tool to launch the script.
+
+From Google Chrome click on the Jenkins bookmark and login with username: admin, password: admin
+
+.. image:: ../images/jenkins-login.png
+   :scale: 50%
+   :align: center
+
+Click on the "1. setup_demo" item.
+
+.. image:: ../images/jenkins-projects.png
+   :scale: 50%
+   :align: center
+
+Click on "Build now"
+
+.. image:: ../images/jenkins-setup_demo-1.png
+   :scale: 50%
+   :align: center
+
+You should see.
+
+.. image:: ../images/jenkins-setup_demo-2.png
+   :scale: 50%
+   :align: center
