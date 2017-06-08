@@ -47,4 +47,4 @@ There are a number of ways that this network model can be implemented. Here is a
 * `Romana <http://romana.io/>`_
 * `Weave net <https://www.weave.works/products/weave-net/>`_
 
-For this lab, we will use Weave net. 
+For this lab, we will use Flannel. 

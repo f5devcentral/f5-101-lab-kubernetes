@@ -71,9 +71,28 @@ Once this is done, you may check that everything is in a stable "Running" state:
 
 If you want to enable Kubernetes UI, you may install the dashboard. Run the following command on the **master**
 
+First download a copy of the YAML file to deploy the dashboard.
 ::
 
-	kubectl create -f https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
+	wget https://git.io/kube-dashboard-no-rbac -O kube-dashboard-no-rbac.yml
+
+Modify the service to be type NodePort
+
+::
+
+	spec:
+	  ports:
+	  - port: 80
+	    targetPort: 9090
+	  type: NodePort
+	  selector:
+	    k8s-app: kubernetes-dashboard
+
+Now run
+
+::
+
+	kubectl create -f kube-dashboard-no-rbac.yml
 
 You should see the following output: 
 

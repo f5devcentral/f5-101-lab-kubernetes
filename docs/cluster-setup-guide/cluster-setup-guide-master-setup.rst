@@ -12,11 +12,11 @@ to setup **master** as a Kubernetes *master*, run the following command:
 
 ::
 
-	sudo kubeadm init --api-advertise-addresses=10.1.10.11
+	sudo kubeadm init --api-advertise-addresses=10.1.10.11 --pod-network-cidr=10.244.0.0/16
 
 Here we specify:
 
-* The IP address that should be used to advertise the master. 10.1.10.0/24 is the network for our controle plane. if you don't specify the --api-advertise-addresses argument, kubeadm will pick the first interface with a default gateway (because it needs internet access). 
+* The IP address that should be used to advertise the master. 10.1.10.0/24 is the network for our control plane. if you don't specify the --api-advertise-addresses argument, kubeadm will pick the first interface with a default gateway (because it needs internet access). 
   
 When running the command you should see something like this:
 
@@ -64,17 +64,37 @@ Here is the list of add-ons available:
 * Romana
 * Weave net
 
-We will use Weave net as mentioned previously. To set Weave net as a network pod, you may use the command: 
+We will use Flannel as mentioned previously. To set Flannel as a network pod, we need to first modify the flannel deployment.  First download the YAML deployment file.
 
 ::
 
-	kubectl apply -f https://git.io/weave-kube
+	wget https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml
 
-you should see something like this: 
+Change "vxlan" to "host-gw" for Type.
 
 ::
 
-	*daemonset "weave-net" created*
+	net-conf.json: |
+		{
+		"Network": "10.244.0.0/16",
+		"Backend": {
+			"Type": "host-gw"
+		}
+		}
+
+Also specify the correct interface (only necessary if you multiple interfaces)
+
+::
+
+	command: [ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr", "--iface=ens4" ]
+
+Now deploy flannel.
+::
+
+	kubectl apply -f ./kube-flannel.yml
+	
+	
+
 
 
 
