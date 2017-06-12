@@ -36,7 +36,7 @@ Here we consider you have already retrieved the F5 container connector image and
 
 .. note::
 
-	If you use the UDF blueprint it's already loaded in our private registry 10.1.10.11:5000 (10.1.10.11:5000/k8s-bigip-ctlr:v1.0.0)**.
+	If you use the UDF blueprint it's already loaded in our private registry 10.1.10.11:5000 (10.1.10.11:5000/k8s-bigip-ctlr:v1.0.0).
 
 If you haven't loaded it in your environment, you have two choices :
 
@@ -80,45 +80,49 @@ create a file called f5-cc-deployment.yaml. Here is its content:
 	spec:
 	  replicas: 1
 	  template:
-	    metadata:
-	      name: k8s-bigip-ctlr
-	      labels:
-	        app: k8s-bigip-ctlr
-	    spec:
-	      containers:
-	        - name: k8s-bigip-ctlr
-	          image: "10.1.10.11:5000/k8s-bigip-ctlr:v1.0.0"
-	          env:
-	            - name: BIGIP_USERNAME
-	              valueFrom:
-	                secretKeyRef:
-	                  name: bigip-login
-	                  key: username
-	            - name: BIGIP_PASSWORD
-	              valueFrom:
-	                secretKeyRef:
-	                  name: bigip-login
-	                  key: password
-	          command: ["/app/bin/k8s-bigip-ctlr"]
-	          args: [
-	            "--bigip-username=$(BIGIP_USERNAME)",
-	            "--bigip-password=$(BIGIP_PASSWORD)",
-	            "--bigip-url=10.1.10.60",
-	            "--bigip-partition=kubernetes",
-	            "--namespace=default",
-	          ]
+		metadata:
+		  name: k8s-bigip-ctlr
+		  labels:
+			app: k8s-bigip-ctlr
+		spec:
+		  containers:
+			- name: k8s-bigip-ctlr
+			  image: "f5networks/k8s-bigip-ctlr:1.1.0-beta.1"
+			  imagePullPolicy: IfNotPresent
+			  env:
+				- name: BIGIP_USERNAME
+				  valueFrom:
+					secretKeyRef:
+					  name: bigip-login
+					  key: username
+				- name: BIGIP_PASSWORD
+				  valueFrom:
+					secretKeyRef:
+					  name: bigip-login
+					  key: password
+			  command: ["/app/bin/k8s-bigip-ctlr"]
+			  args: [
+				"--bigip-username=$(BIGIP_USERNAME)",
+				"--bigip-password=$(BIGIP_PASSWORD)",
+				"--bigip-url=10.1.10.60",
+				"--bigip-partition=kubernetes",
+				"--namespace=default",
+				"--pool-member-type=cluster",
+			  ]
+
 
 .. Note::
 
 	If you use UDF, you have templates you can use in your jumpbox. It's on the Desktop > F5 > kubernetes-demo folder. If you use those files, you'll need to :
-	* check the container image path in the deployment file is accurate
-	* Update the "bindAddr" in the configMap for an IP you want to use in this blueprint. 
+
+		* check the container image path in the deployment file is accurate
+		* Update the "bindAddr" in the configMap for an IP you want to use in this blueprint. 
 
 if you don't use the UDF blueprint, you need to update the field *image* with the appropriate path to your image. 
 
-If you have issues with your yaml and syntax (**identation MATTERS**), you can try to use an online parser to help you : `Yaml parser <http://www.yamllint.com/>`_
+If you have issues with your yaml and syntax (**identation MATTERS**), you can try to use an online parser to help you : `Yaml parser <http://codebeautify.org/yaml-validator>`_
 
-Once you have your yaml file setup, you can try to launch your deployment. It will start our f5-k8s-controller container on one of our node: 
+Once you have your yaml file setup, you can try to launch your deployment. It will start our f5-k8s-controller container on one of our node (may take around 30sec to be in a running state): 
 
 ::
 
@@ -161,7 +165,7 @@ On **ip-10-1-1-5** which is Node1 (or another node depending on the previous com
 
 :: 
 
-	docker ps 
+	sudo docker ps 
 
 .. image:: ../images/f5-container-connector-find-dockerID--controller-container.png
 	:align: center
@@ -172,7 +176,7 @@ Now we can check our container logs:
 
 :: 
 
-	docker logs 7a774293230b 
+	sudo docker logs 7a774293230b 
 
 .. image:: ../images/f5-container-connector-check-logs-controller-container.png
 	:align: center
@@ -187,3 +191,5 @@ You can connect to your container with kubectl also:
 	 cd /app
 
 	 ls -lR
+
+	 exit

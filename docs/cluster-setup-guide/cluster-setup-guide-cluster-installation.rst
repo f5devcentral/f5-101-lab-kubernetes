@@ -1,4 +1,4 @@
-.. _my-cluster-setup: 
+.. _my-cluster-setup:
 
 Cluster installation
 ====================
@@ -6,7 +6,7 @@ Cluster installation
 Overview
 --------
 
-As a reminder, in this example, this is our cluster setup: 
+As a reminder, in this example, this is our cluster setup:
 
 ==================  ====================  ====================  ============
      Hostname           Management IP        Kubernetes IP          Role
@@ -26,7 +26,7 @@ To install Kubernetes on our ubuntu systems, we will leverage **kubeadm**
 Here are the steps that are involved (detailed later):
 
 1. make sure that firewalld is disabled (not supported today with kubeadm)
-2. disable Apparmor 
+2. disable Apparmor
 3. install docker if not already done (many kubernetes services will run into containers for reliability)
 4. install kubernetes packages
 
@@ -43,34 +43,33 @@ to make sure the systems are up to date, run this command on **all systems**:
 installation
 -------------
 
-You need **root privileges** for this section, either use sudo or su to gain the required privileges. 
+You need **root privileges** for this section, either use sudo or su to gain the required privileges.
 
 you need to give access to the kubernetes packages to your systems, do this on **all systems**:
 
 ::
 
-	apt-get update && apt-get install -y apt-transport-https
+    apt-get update && apt-get install -y apt-transport-https
+    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+    cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+    deb http://apt.kubernetes.io/ kubernetes-xenial main
+    EOF
+    apt-get update
 
-	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-	
-	cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
-	deb http://apt.kubernetes.io/ kubernetes-xenial main
-	EOF
+    sudo apt-get -y install kubectl=1.5.3-00 kubelet=1.5.3-00 kubernetes-cni=0.3.0.1-07a8a2-00
 
-	apt-get update
+    curl -Lo /tmp/old-kubeadm.deb https://apt.k8s.io/pool/kubeadm_1.6.0-alpha.0.2074-a092d8e0f95f52-00_amd64_0206dba536f698b5777c7d210444a8ace18f48e045ab78687327631c6c694f42.deb
+    sudo dpkg -i /tmp/old-kubeadm.deb
+    sudo apt-get install -f
+
+    sudo apt-mark hold kubeadm kubectl kubelet kubernetes-cni
 
 once this is done, install docker if not already done on **all systems**:
 
 ::
 
-	apt-get install -y docker.io 
+	apt-get install -y docker.io
 
-then install our needed kubernetes packages on **all systems**:
-
-::
-
-	apt-get install -y kubelet kubeadm kubectl kubernetes-cni
-	
 
 Limitations
 -----------

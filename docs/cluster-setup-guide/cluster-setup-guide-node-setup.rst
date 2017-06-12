@@ -11,7 +11,7 @@ to join the master we need to run the command highlighted during the master init
 
 ::
 
-	kkubeadm join --token=62468f.9dfb3fc97a985cf9 10.1.10.11
+	sudo kubeadm join --token=62468f.9dfb3fc97a985cf9 10.1.10.11
 
 
 the output should be like this :
@@ -52,7 +52,7 @@ to fix this, you need to run the following command on the **master**:
 
 ::
 
-	apt-get install -y jq
+	sudo apt-get install -y jq
 
 	kubectl -n kube-system get ds -l 'component=kube-proxy' -o json | jq '.items[0].spec.template.spec.containers[0].command |= .+ ["--cluster-cidr=10.32.0.0/12"]' | kubectl apply -f - && kubectl -n kube-system delete pods -l 'component=kube-proxy'
 
@@ -71,9 +71,28 @@ Once this is done, you may check that everything is in a stable "Running" state:
 
 If you want to enable Kubernetes UI, you may install the dashboard. Run the following command on the **master**
 
+First download a copy of the YAML file to deploy the dashboard.
 ::
 
-	kubectl create -f https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
+	wget https://git.io/kube-dashboard-no-rbac -O kube-dashboard-no-rbac.yml
+
+Modify the service to be type NodePort
+
+::
+
+	spec:
+	  ports:
+	  - port: 80
+	    targetPort: 9090
+	  type: NodePort
+	  selector:
+	    k8s-app: kubernetes-dashboard
+
+Now run
+
+::
+
+	kubectl create -f kube-dashboard-no-rbac.yml
 
 You should see the following output: 
 
