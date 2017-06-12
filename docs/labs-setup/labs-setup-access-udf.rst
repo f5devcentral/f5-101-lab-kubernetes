@@ -19,7 +19,7 @@ Start your UDF environment
 
 Connect to UDF and go to deployment. 
 
-Select the relevant blueprint based on your need: A standalone Kubernetes deployment (1 master, 2 nodes), find the *[Kubernetes] how to setup ASP and CC* blueprint and deploy it
+Select the relevant blueprint: *[Kubernetes] how to setup ASP and CC* blueprint and deploy it. This blueprint contains a standalone Kubernetes deployment (1 master, 2 nodes).
 
 
 .. warning:: 

@@ -11,4 +11,4 @@ We consider that you have a valid UDF access (Private Cloud of F5 Networks) to d
 
 The lab guide is hosted here: http://101-lab-kubernetes.readthedocs.io
 
-We also have the option to use an ansible playbook to automate the deployment. 
+We also have the option to use a script to automatically deploy the F5 solutions

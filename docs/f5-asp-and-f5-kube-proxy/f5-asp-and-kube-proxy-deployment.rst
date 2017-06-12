@@ -7,7 +7,7 @@ Every node in the cluster need to run an instance of ASP. The steps below demons
 
 The DaemonSet ensures one Application Services Proxy runs per node in the Kubernetes cluster. The ConfigMap contains the configurations you want to apply to each ASP instance.
 
-The first step will be to load the relevant F5 container images into our system. if you use the UDF blueprint, it's already done in our private registry (10.1.10.11:5000)
+The first step will be to load the relevant F5 container images into our system. if you use the UDF blueprint, it's already done in our private registry (10.1.10.11:5000).  Normally you would retreive ASP from the Docker Store (requires accepting a EULA, freely distributed).
 
 the official F5 ASP documentation is here: `Install the F5 Kubernetes Application Service Proxy <http://clouddocs.f5.com/containers/v1/kubernetes/asp-install-k8s.html>`_  and `Deploy the F5 Application Service Proxy with the F5 Kubernetes Prox <http://clouddocs.f5.com/containers/v1/kubernetes/asp-k-deploy.html>`_ 
 
@@ -144,80 +144,76 @@ Here is the content of the file, copy/paste it.
 	apiVersion: extensions/v1beta1
 	kind: DaemonSet
 	metadata:
-	  annotations:
-	    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"extensions/v1beta1","kind":"DaemonSet","metadata":{"annotations":{},"creationTimestamp":"2017-01-31T10:43:01Z","generation":3,"labels":{"component":"kube-proxy","k8s-app":"kube-proxy","kubernetes.io/cluster-service":"true","name":"kube-proxy","tier":"node"},"name":"kube-proxy","namespace":"kube-system","resourceVersion":"278413","selfLink":"/apis/extensions/v1beta1/namespaces/kube-system/daemonsets/kube-proxy","uid":"09f08c86-e7a2-11e6-b1ea-525400ce18b9"},"spec":{"selector":{"matchLabels":{"component":"kube-proxy","k8s-app":"kube-proxy","kubernetes.io/cluster-service":"true","name":"kube-proxy","tier":"node"}},"template":{"metadata":{"annotations":{"scheduler.alpha.kubernetes.io/affinity":"{\"nodeAffinity\":{\"requiredDuringSchedulingIgnoredDuringExecution\":{\"nodeSelectorTerms\":[{\"matchExpressions\":[{\"key\":\"beta.kubernetes.io/arch\",\"operator\":\"In\",\"values\":[\"amd64\"]}]}]}}}","scheduler.alpha.kubernetes.io/tolerations":"[{\"key\":\"dedicated\",\"value\":\"master\",\"effect\":\"NoSchedule\"}]"},"creationTimestamp":null,"labels":{"component":"kube-proxy","k8s-app":"kube-proxy","kubernetes.io/cluster-service":"true","name":"kube-proxy","tier":"node"}},"spec":{"containers":[{"command":["/proxy","--kubeconfig=/run/kubeconfig"],"image":"f5networks/f5-ci-beta:f5-kube-proxy-v1.3.7_f5.1","imagePullPolicy":"IfNotPresent","name":"kube-proxy","resources":{},"securityContext":{"privileged":true},"terminationMessagePath":"/dev/termination-log","volumeMounts":[{"mountPath":"/var/run/dbus","name":"dbus"},{"mountPath":"/run/kubeconfig","name":"kubeconfig"},{"mountPath":"/var/run/kubernetes/proxy-plugin","name":"plugin-config"}]}],"dnsPolicy":"ClusterFirst","hostNetwork":true,"restartPolicy":"Always","securityContext":{},"terminationGracePeriodSeconds":30,"volumes":[{"hostPath":{"path":"/etc/kubernetes/kubelet.conf"},"name":"kubeconfig"},{"hostPath":{"path":"/var/run/dbus"},"name":"dbus"},{"hostPath":{"path":"/var/run/kubernetes/proxy-plugin"},"name":"plugin-config"}]}}},"status":{"currentNumberScheduled":3,"desiredNumberScheduled":3,"numberMisscheduled":0,"numberReady":3}}'
-	  creationTimestamp: 2017-02-02T14:12:27Z
+	  creationTimestamp: null
 	  generation: 1
 	  labels:
-	    component: kube-proxy
-	    k8s-app: kube-proxy
-	    kubernetes.io/cluster-service: "true"
-	    name: kube-proxy
-	    tier: node
+		component: kube-proxy
+		k8s-app: kube-proxy
+		kubernetes.io/cluster-service: "true"
+		name: kube-proxy
+		tier: node
 	  name: kube-proxy
-	  namespace: kube-system
-	  resourceVersion: "279250"
-	  selfLink: /apis/extensions/v1beta1/namespaces/kube-system/daemonsets/kube-proxy
-	  uid: a0917852-e951-11e6-b1ea-525400ce18b9
+	  selfLink: /apis/extensions/v1beta1/namespaces//daemonsets/kube-proxy
 	spec:
 	  selector:
-	    matchLabels:
-	      component: kube-proxy
-	      k8s-app: kube-proxy
-	      kubernetes.io/cluster-service: "true"
-	      name: kube-proxy
-	      tier: node
+		matchLabels:
+		  component: kube-proxy
+		  k8s-app: kube-proxy
+		  kubernetes.io/cluster-service: "true"
+		  name: kube-proxy
+		  tier: node
 	  template:
-	    metadata:
-	      annotations:
-	        scheduler.alpha.kubernetes.io/affinity: '{"nodeAffinity":{"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"beta.kubernetes.io/arch","operator":"In","values":["amd64"]}]}]}}}'
-        	scheduler.alpha.kubernetes.io/tolerations: '[{"key":"dedicated","value":"master","effect":"NoSchedule"}]'
-	      creationTimestamp: null
-	      labels:
-	        component: kube-proxy
-	        k8s-app: kube-proxy
-	        kubernetes.io/cluster-service: "true"
-	        name: kube-proxy
-	        tier: node
-	    spec:
-	      containers:
-	      - command:
-	        - /proxy
-	        - --kubeconfig=/run/kubeconfig
-	        image: 10.1.10.11:5000/f5-kube-proxy:v1.0.0
-	        imagePullPolicy: IfNotPresent
-	        name: kube-proxy
-	        resources: {}
-	        securityContext:
-	          privileged: true
-	        terminationMessagePath: /dev/termination-log
-	        volumeMounts:
-	        - mountPath: /var/run/dbus
-	          name: dbus
-	        - mountPath: /run/kubeconfig
-	          name: kubeconfig
-	        - mountPath: /var/run/kubernetes/proxy-plugin
-	          name: plugin-config
-	      dnsPolicy: ClusterFirst
-	      hostNetwork: true
-	      restartPolicy: Always
-	      securityContext: {}
-	      terminationGracePeriodSeconds: 30
-	      volumes:
-	      - hostPath:
-	          path: /etc/kubernetes/kubelet.conf
-	        name: kubeconfig
-	      - hostPath:
-	          path: /var/run/dbus
-	        name: dbus
-	      - hostPath:
-	          path: /var/run/kubernetes/proxy-plugin
-	        name: plugin-config
+		metadata:
+		  annotations:
+			scheduler.alpha.kubernetes.io/affinity: '{"nodeAffinity":{"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"beta.kubernetes.io/arch","operator":"In","values":["amd64"]}]}]}}}'
+			scheduler.alpha.kubernetes.io/tolerations: '[{"key":"dedicated","value":"master","effect":"NoSchedule"}]'
+		  creationTimestamp: null
+		  labels:
+			component: kube-proxy
+			k8s-app: kube-proxy
+			kubernetes.io/cluster-service: "true"
+			name: kube-proxy
+			tier: node
+		spec:
+		  containers:
+		  - command:
+			- /proxy
+			- --kubeconfig=/run/kubeconfig
+			image: f5networks/f5-kube-proxy:1.0.0
+			imagePullPolicy: IfNotPresent
+			name: kube-proxy
+			resources: {}
+			securityContext:
+			  privileged: true
+			terminationMessagePath: /dev/termination-log
+			volumeMounts:
+			- mountPath: /var/run/dbus
+			  name: dbus
+			- mountPath: /run/kubeconfig
+			  name: kubeconfig
+			- mountPath: /var/run/kubernetes/proxy-plugin
+			  name: plugin-config
+			  readOnly: false
+		  dnsPolicy: ClusterFirst
+		  hostNetwork: true
+		  restartPolicy: Always
+		  securityContext: {}
+		  terminationGracePeriodSeconds: 30
+		  volumes:
+		  - hostPath:
+			  path: /etc/kubernetes/kubelet.conf
+			name: kubeconfig
+		  - hostPath:
+			  path: /var/run/dbus
+			name: dbus
+		  - name: plugin-config
+			hostPath:
+			  path: /var/run/kubernetes/proxy-plugin
 	status:
-	  currentNumberScheduled: 3
-	  desiredNumberScheduled: 3
+	  currentNumberScheduled: 0
+	  desiredNumberScheduled: 0
 	  numberMisscheduled: 0
-	  numberReady: 3
+	  numberReady: 0
 
 
 Now that we have the legacy ds config and the updated one, we can delete the existing kube-proxy ds with the following command:
