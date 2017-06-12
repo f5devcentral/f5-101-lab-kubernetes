@@ -94,14 +94,15 @@ Kubernetes ServiceTypes allow you to specify what kind of *service* you want. **
 
 Valid values for the ServiceType field are:
 
-* ExternalName: map the *service* to the contents of the externalName field (e.g. foo.bar.example.com), by returning a CNAME record with its value. No proxying of any kind is set up. This requires version 1.7 or higher of kube-dns.
+ * ExternalName: map the *service* to the contents of the externalName field (e.g. foo.bar.example.com), by returning a CNAME record with its value. No proxying of any kind is set up. This requires version 1.7 or higher of kube-dns.
 
-* ClusterIP: use a cluster-internal IP only - this is the default and is discussed above. Choosing this value means that you want this *service* to be reachable only from inside of the *cluster*.
+ * ClusterIP: use a cluster-internal IP only - this is the default and is discussed above. Choosing this value means that you want this *service* to be reachable only from inside of the *cluster*.
 
-* NodePort: on top of having a cluster-internal IP, expose the *service* on a port on each node of the cluster (the same port on each *node*). You’ll be able to contact the service on any <NodeIP>:NodePort address. If you set the type field to "NodePort", the Kubernetes master will allocate a port from a flag-configured range **(default: 30000-32767)**, and each Node will proxy that port (the same port number on every Node) into your *Service*. That port will be reported in your Service’s spec.ports[*].nodePort field.
-If you want a specific port number, you can specify a value in the nodePort field, and the system will allocate you that port or else the API transaction will fail (i.e. you need to take care about possible port collisions yourself). **The value you specify must be in the configured range for node ports**.
+ * NodePort: on top of having a cluster-internal IP, expose the *service* on a port on each node of the cluster (the same port on each *node*). You’ll be able to contact the service on any <NodeIP>:NodePort address. If you set the type field to "NodePort", the Kubernetes master will allocate a port from a flag-configured range **(default: 30000-32767)**, and each Node will proxy that port (the same port number on every Node) into your *Service*. That port will be reported in your Service’s spec.ports[*].nodePort field.
 
-* LoadBalancer: on top of having a cluster-internal IP and exposing service on a NodePort also, ask the cloud provider for a load balancer which forwards to the Service exposed as a <NodeIP>:NodePort for each Node
+  If you want a specific port number, you can specify a value in the nodePort field, and the system will allocate you that port or else the API transaction will fail (i.e. you need to take care about possible port collisions yourself). **The value you specify must be in the configured range for node ports**.
+
+ * LoadBalancer: on top of having a cluster-internal IP and exposing service on a NodePort also, ask the cloud provider for a load balancer which forwards to the Service exposed as a <NodeIP>:NodePort for each Node
   
 Service type: LoadBalancer
 --------------------------
@@ -166,6 +167,8 @@ The recommended way to implement Service discovery with Kubernetes is the same a
 when building a cluster, you can add *add-on* to it. One of the available *add-on* is a DNS Server. 
 
  The DNS server watches the Kubernetes API for new *Services* and creates a set of DNS records for each. If DNS has been enabled throughout the cluster then all *Pods* should be able to do name resolution of Services automatically.
+ 
+
 For example, if you have a *Service* called "my-service" in Kubernetes Namespace "my-ns" a DNS record for "my-service.my-ns" is created. *Pods* which exist in the "my-ns" Namespace should be able to find it by simply doing a name lookup for "my-service". *Pods* which exist in other Namespaces must qualify the name as "my-service.my-ns". The result of these name lookups is the *cluster IP*.
 
 Kubernetes also supports DNS SRV (service) records for named ports. If the "my-service.my-ns" *Servic*e has a port named "http" with protocol TCP, you can do a DNS SRV query for "_http._tcp.my-service.my-ns" to discover the port number for "http"
