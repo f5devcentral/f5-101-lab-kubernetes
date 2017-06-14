@@ -72,43 +72,43 @@ create a file called f5-cc-deployment.yaml. Here is its content:
 
 ::
 
-	apiVersion: extensions/v1beta1
-	kind: Deployment
-	metadata:
-	  name: k8s-bigip-ctlr-deployment
-	  namespace: kube-system
-	spec:
-	  replicas: 1
-	  template:
-		metadata:
-		  name: k8s-bigip-ctlr
-		  labels:
-			app: k8s-bigip-ctlr
-		spec:
-		  containers:
-			- name: k8s-bigip-ctlr
-			  image: "f5networks/k8s-bigip-ctlr:1.1.0-beta.1"
-			  imagePullPolicy: IfNotPresent
-			  env:
-				- name: BIGIP_USERNAME
-				  valueFrom:
-					secretKeyRef:
-					  name: bigip-login
-					  key: username
-				- name: BIGIP_PASSWORD
-				  valueFrom:
-					secretKeyRef:
-					  name: bigip-login
-					  key: password
-			  command: ["/app/bin/k8s-bigip-ctlr"]
-			  args: [
-				"--bigip-username=$(BIGIP_USERNAME)",
-				"--bigip-password=$(BIGIP_PASSWORD)",
-				"--bigip-url=10.1.10.60",
-				"--bigip-partition=kubernetes",
-				"--namespace=default",
-				"--pool-member-type=cluster",
-			  ]
+        apiVersion: extensions/v1beta1
+        kind: Deployment
+        metadata:
+          name: k8s-bigip-ctlr-deployment
+          namespace: kube-system
+        spec:
+          replicas: 1
+          template:
+            metadata:
+              name: k8s-bigip-ctlr
+              labels:
+                app: k8s-bigip-ctlr
+            spec:
+              containers:
+                - name: k8s-bigip-ctlr
+                  image: "f5networks/k8s-bigip-ctlr:1.0.0"
+                  imagePullPolicy: IfNotPresent
+                  env:
+                    - name: BIGIP_USERNAME
+                      valueFrom:
+                        secretKeyRef:
+                          name: bigip-login
+                          key: username
+                    - name: BIGIP_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                          name: bigip-login
+                          key: password
+                  command: ["/app/bin/k8s-bigip-ctlr"]
+                  args: [
+                    "--bigip-username=$(BIGIP_USERNAME)",
+                    "--bigip-password=$(BIGIP_PASSWORD)",
+                    "--bigip-url=10.1.10.60",
+                    "--bigip-partition=kubernetes",
+                    "--namespace=default"
+                  ]
+
 
 
 .. Note::
