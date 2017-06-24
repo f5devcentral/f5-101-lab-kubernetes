@@ -70,7 +70,7 @@ We will use Flannel as mentioned previously. To set Flannel as a network pod, we
 
 ::
 
-	wget https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml
+	wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 
 Change "vxlan" to "host-gw" for Type.
