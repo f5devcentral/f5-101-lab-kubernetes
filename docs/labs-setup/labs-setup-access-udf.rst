@@ -1,11 +1,11 @@
-.. _access_udf:
+.. _access_ravello:
 
-Connecting to UDF
+Connecting to Ravello
 =================
 
-We consider that you have access to UDF for the different labs. 
+We consider that you have access to Ravello for the different labs. 
 
-This guide will help you to either setup your own environment or leverage F5 UDF (you must be a F5 employee) to learn about this. 
+This guide will help you to log into a custom-designed cloud-based environment using Ravello 
 
 
 Create your environment
@@ -17,7 +17,7 @@ If you want to setup your own kubernetes environment, you need to create your ow
 Start your UDF environment
 --------------------------
 
-Connect to UDF and go to deployment. 
+Connect to Ravello and go to deployment. 
 
 Select the relevant blueprint: *[Kubernetes] how to setup ASP and CC* blueprint and deploy it. This blueprint contains a standalone Kubernetes deployment (1 master, 2 nodes).
 
