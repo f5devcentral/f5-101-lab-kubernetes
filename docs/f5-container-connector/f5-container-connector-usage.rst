@@ -3,7 +3,7 @@ Container Connector Usage
 
 Now that our container connector is up and running, let's deploy an application and leverage our CC. 
 
-if you don't use UDF, you can deploy any application you want. In UDF, the blueprint already has a container called f5-demo-app already loaded as an image (Application provided by Eric Chen - F5 Cloud SA). It is loaded in our container registry 10.1.10.11:5000/f5-demo-app
+if you don't use UDF, you can deploy any application you want. In UDF, the blueprint already has a container called f5-demo-app already loaded as an image (Application provided by Eric Chen - F5 Cloud SA). It is loaded in Docker Hub chen23/f5-demo-app
 
 To deploy our front-end application, we will need to do the following:
 
@@ -32,7 +32,7 @@ Create a file called my-frontend-deployment.yaml:
 	        run: my-frontend
 	    spec:
 	      containers:
-	      - image: "10.1.10.11:5000/f5-demo-app"
+	      - image: "chen23/f5-demo-app"
 	        env:
 	        - name: F5DEMO_APP
 	          value: "frontend"
@@ -56,7 +56,7 @@ Create a file called my-frontend-configmap.yaml:
 	  labels:
 	    f5type: virtual-server
 	data:
-	  schema: "f5schemadb://bigip-virtual-server_v0.1.2.json"
+	  schema: "f5schemadb://bigip-virtual-server_v0.1.3.json"
 	  data: |-
 	    {
 	      "virtualServer": {
@@ -174,4 +174,158 @@ Hit Refresh many times and go to your **BIG-IP** UI, go to Local Traffic > Pools
  .. image:: ../images/f5-container-connector-list-frontend-iptables.png
  	:align: center
  	:scale: 50%
+
+
+Ingress Resources
+-----------------
+
+The Container Connector also supports Kubernetes Ingress Resources as of version 1.1.0 of the F5 Container Connector.
+
+Ingress Resources provides L7 path/hostname routing of HTTP requests.
+
+On the master we will create a file called "node-blue.yaml".
+
+::
+    
+	apiVersion: extensions/v1beta1
+	kind: Deployment
+	metadata:
+	  name: node-blue
+	spec:
+	  replicas: 1
+	  template:
+		metadata:
+		  labels:
+			run: node-blue
+		spec:
+		  containers:
+		  - image: "chen23/f5-demo-app"
+			env:
+			- name: F5DEMO_APP
+			  value: "website"
+			- name: F5DEMO_NODENAME
+			  value: "Node Blue"
+			- name: F5DEMO_COLOR
+			  value: 0000FF
+			imagePullPolicy: IfNotPresent
+			name: node-blue
+			ports:
+			- containerPort: 80
+			  protocol: TCP
+	
+	
+	---
+	apiVersion: v1
+	kind: Service
+	metadata:
+	  name: node-blue
+	  labels:
+		run: node-blue
+	spec:
+	  ports:
+	  - port: 80
+		protocol: TCP
+		targetPort: 80
+	  type: NodePort
+	  selector:
+		run: node-blue 
+
+and another file "node-green.yaml".
+
+::
+    
+	apiVersion: extensions/v1beta1
+	kind: Deployment
+	metadata:
+	  name: node-green
+	spec:
+	  replicas: 1
+	  template:
+		metadata:
+		  labels:
+			run: node-green
+		spec:
+		  containers:
+		  - image: "chen23/f5-demo-app"
+			env:
+			- name: F5DEMO_APP
+			  value: "website"
+			- name: F5DEMO_NODENAME
+			  value: "Node Green"
+			- name: F5DEMO_COLOR
+			  value: 00FF00
+			imagePullPolicy: IfNotPresent
+			name: node-green
+			ports:
+			- containerPort: 80
+			  protocol: TCP
+	
+	---
+	apiVersion: v1
+	kind: Service
+	metadata:
+	  name: node-green
+	  labels:
+		run: node-green
+	spec:
+	  ports:
+	  - port: 80
+		protocol: TCP
+		targetPort: 80
+	  type: NodePort
+	  selector:
+		run: node-green
+
+These will represent two resources that we want to place behind a single F5 Virtual Server.
+
+Next we will create a file "blue-green-ingress.yaml".
+
+::
+    
+	apiVersion: extensions/v1beta1
+	kind: Ingress
+	metadata:
+	  name: blue-green-ingress
+	  annotations:
+		virtual-server.f5.com/ip: "10.1.10.82"
+		virtual-server.f5.com/http-port: "80"
+		virtual-server.f5.com/partition: "kubernetes"
+		virtual-server.f5.com/health: |
+		  [
+			{
+			  "path":     "blue.f5demo.com/",
+			  "send":     "HTTP GET /",
+			  "interval": 5,
+			  "timeout":  15
+			}, {
+			  "path":     "green.f5demo.com/",
+			  "send":     "HTTP GET /",
+			  "interval": 5,
+			  "timeout":  15
+			}
+		  ]
+		kubernetes.io/ingress.class: "f5"
+	spec:
+	  rules:
+	  - host: blue.f5demo.com
+		http:
+		  paths:
+		  - backend:
+			  serviceName: node-blue
+			  servicePort: 80
+	  - host: green.f5demo.com
+		http:
+		  paths:
+		  - backend:
+			  serviceName: node-green
+			  servicePort: 80
+
+
+We can now deploy our ingress resources.
+
+::
+  
+  kubectl create -f node-blue.yaml
+  kubectl create -f node-green.yaml
+  kubectl create -f blue-green-ingress.yaml
 
