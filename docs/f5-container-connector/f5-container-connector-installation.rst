@@ -87,7 +87,7 @@ create a file called f5-cc-deployment.yaml. Here is its content:
             spec:
               containers:
                 - name: k8s-bigip-ctlr
-                  image: "f5networks/k8s-bigip-ctlr:1.0.0"
+                  image: "f5networks/k8s-bigip-ctlr:1.1.1"
                   imagePullPolicy: IfNotPresent
                   env:
                     - name: BIGIP_USERNAME
