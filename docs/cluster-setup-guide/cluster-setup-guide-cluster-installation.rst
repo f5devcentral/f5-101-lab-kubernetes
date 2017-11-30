@@ -17,11 +17,9 @@ As a reminder, in this example, this is our cluster setup:
 ==================  ====================  ====================  ============
 
 
-For this setup we will use the steps specified here: `Ubuntu getting started guide 16.04 <http://kubernetes.io/docs/getting-started-guides/kubeadm/>`_
+For this setup we will leverage **kubeadm** to install Kubernetes on own Ubuntu Servers version 16.04; steps we are going to use are specified in details here: `Ubuntu getting started guide 16.04 <http://kubernetes.io/docs/getting-started-guides/kubeadm/>`
 
-For ubuntu version earlier than 15, you will need to refer to this process: `Ubuntu getting started guide <http://kubernetes.io/docs/getting-started-guides/ubuntu/manual/>`_
-
-To install Kubernetes on our ubuntu systems, we will leverage **kubeadm**
+If you think you'll need a custom solution installed on on-premises VMs, please refer to this documentation: `Kubernetes on Ubuntu <https://kubernetes.io/docs/getting-started-guides/ubuntu/>`_
 
 Here are the steps that are involved (detailed later):
 
