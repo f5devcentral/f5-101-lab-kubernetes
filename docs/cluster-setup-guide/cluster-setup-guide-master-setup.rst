@@ -82,7 +82,7 @@ We will use Flannel as mentioned previously. To set Flannel as a network pod, we
 	wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 
-Change "vxlan" to "host-gw" for Type and delete the "portmap" plugi; you shoud have a json section which reads:
+Change "vxlan" to "host-gw" for Type and delete the "portmap" plugin; you shoud have a json section which reads:
 
 ::
 
@@ -129,8 +129,8 @@ Now deploy flannel.
 	kubectl apply -f ./kube-flannel.yml
 	
 
-check master state
-------------------
+Finale checks on Kebernete Master Server state
+----------------------------------------------
 
 If everything runs as expected you should have kube-dns that started successfully. To check the status of the different service, you can run the command:
 
