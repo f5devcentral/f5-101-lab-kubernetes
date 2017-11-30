@@ -129,7 +129,7 @@ Now deploy flannel.
 	kubectl apply -f ./kube-flannel.yml
 	
 
-Finale checks on Kebernete Master Server state
+Final checks on Kubernetes Master Server state
 ----------------------------------------------
 
 If everything runs as expected you should have kube-dns that started successfully. To check the status of the different service, you can run the command:
