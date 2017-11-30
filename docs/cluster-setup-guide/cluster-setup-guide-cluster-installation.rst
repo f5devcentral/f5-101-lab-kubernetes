@@ -20,7 +20,7 @@ As a reminder, in this example, this is our cluster setup:
 
         This guide is certified with Kubernetes version 1.8.4-00
 
-For this setup we will leverage **kubeadm** to install Kubernetes on own Ubuntu Servers version 16.04; steps we are going to use are specified in details here: `Ubuntu getting started guide 16.04 <http://kubernetes.io/docs/getting-started-guides/kubeadm/>`
+For this setup we will leverage **kubeadm** to install Kubernetes on your own Ubuntu Servers version 16.04; steps we are going to use are specified in details here: `Ubuntu getting started guide 16.04 <http://kubernetes.io/docs/getting-started-guides/kubeadm/>`
 
 If you think you'll need a custom solution installed on on-premises VMs, please refer to this documentation: `Kubernetes on Ubuntu <https://kubernetes.io/docs/getting-started-guides/ubuntu/>`_
 
@@ -32,7 +32,7 @@ Here are the steps that are involved (detailed later):
 4. install docker if not already done (many kubernetes services will run into containers for reliability)
 5. install kubernetes packages
 
-to make sure the systems are up to date, run these commands on **all systems**:
+To make sure the systems are up to date, run these commands on **all systems**:
 
 .. warning::
 
@@ -69,4 +69,6 @@ Limitations
 
 for a full list of the limitations go here: `kubeadm limitations <http://kubernetes.io/docs/getting-started-guides/kubeadm/#limitations>`_
 
-* the cluster created here has a single master, with a single etcd database running on it. This means that if the master fails, your cluster loses its configuration data and will need to be recreated from scratch
+.. warning::
+
+        The cluster created here has a single master, with a single etcd database running on it. This means that if the master fails, your cluster loses its configuration data and will need to be recreated from scratch
