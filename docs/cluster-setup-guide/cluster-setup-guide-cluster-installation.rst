@@ -47,12 +47,14 @@ As previously said, you need **root privileges** for this section, either use su
 
 ::
 
-    apt-get update && apt-get install -y apt-transport-https
+    sudo apt-get update
+    sudo apt-get -y upgrade
+    sudo apt-get install -y apt-transport-https
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
     cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
     deb http://apt.kubernetes.io/ kubernetes-xenial main
     EOF
-    apt-get update
+    sudo apt-get update
 
     sudo apt-get -y install kubectl=1.8.4-00 kubelet=1.8.4-00 kubernetes-cni=0.5.1-00 kubeadm=1.8.4-00
     sudo apt-mark hold kubeadm kubectl kubelet kubernetes-cni
@@ -61,7 +63,7 @@ Once this is done, install docker if not already done on **all systems**:
 
 ::
 
-	apt-get install -y docker.io
+	sudo apt-get install -y docker.io
 
 
 Limitations
