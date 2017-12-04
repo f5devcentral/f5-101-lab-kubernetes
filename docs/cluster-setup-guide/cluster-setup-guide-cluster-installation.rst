@@ -16,25 +16,23 @@ As a reminder, in this example, this is our cluster setup:
       node 2              10.1.1.6            10.1.10.22           node
 ==================  ====================  ====================  ============
 
+.. warning::
 
-For this setup we will use the steps specified here: `Ubuntu getting started guide 16.04 <http://kubernetes.io/docs/getting-started-guides/kubeadm/>`_
+        This guide is certified with Kubernetes version 1.8.4-00
 
-For ubuntu version earlier than 15, you will need to refer to this process: `Ubuntu getting started guide <http://kubernetes.io/docs/getting-started-guides/ubuntu/manual/>`_
+For this setup we will leverage **kubeadm** to install Kubernetes on your own Ubuntu Servers version 16.04; steps we are going to use are specified in details here: `Ubuntu getting started guide 16.04 <http://kubernetes.io/docs/getting-started-guides/kubeadm/>`
 
-To install Kubernetes on our ubuntu systems, we will leverage **kubeadm**
+If you think you'll need a custom solution installed on on-premises VMs, please refer to this documentation: `Kubernetes on Ubuntu <https://kubernetes.io/docs/getting-started-guides/ubuntu/>`_
 
 Here are the steps that are involved (detailed later):
 
 1. make sure that firewalld is disabled (not supported today with kubeadm)
 2. disable Apparmor
-3. install docker if not already done (many kubernetes services will run into containers for reliability)
-4. install kubernetes packages
+3. make sure all systems are up to date
+4. install docker if not already done (many kubernetes services will run into containers for reliability)
+5. install kubernetes packages
 
-to make sure the systems are up to date, run this command on **all systems**:
-
-::
-
-	sudo apt-get update && sudo apt-get upgrade -y
+To make sure the systems are up to date, run these commands on **all systems**:
 
 .. warning::
 
@@ -43,32 +41,29 @@ to make sure the systems are up to date, run this command on **all systems**:
 installation
 -------------
 
-You need **root privileges** for this section, either use sudo or su to gain the required privileges.
+We need to be sure the Ubuntu OS is up to date, we add Kubernetes repository to the list ov available Ubuntu package sources adn we install Kebernetes packages for version 1.8.4, making sure to hold with this version even when upgrading the OS. THis procedure will install Docker on all systems because most of the component of Kubernetes will leverage this container technology.
 
-you need to give access to the kubernetes packages to your systems, do this on **all systems**:
+As previously said, you need **root privileges** for this section, either use sudo or su to gain the required privileges; morover be sure to execute this procedure on **all systems**.
 
 ::
 
-    apt-get update && apt-get install -y apt-transport-https
-    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-    cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+    sudo apt-get update
+    sudo apt-get -y upgrade
+    sudo apt-get install -y apt-transport-https
+    sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+    sudo cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
     deb http://apt.kubernetes.io/ kubernetes-xenial main
     EOF
-    apt-get update
+    sudo apt-get update
 
-    sudo apt-get -y install kubectl=1.5.3-00 kubelet=1.5.3-00 kubernetes-cni=0.3.0.1-07a8a2-00
-
-    curl -Lo /tmp/old-kubeadm.deb https://apt.k8s.io/pool/kubeadm_1.6.0-alpha.0.2074-a092d8e0f95f52-00_amd64_0206dba536f698b5777c7d210444a8ace18f48e045ab78687327631c6c694f42.deb
-    sudo dpkg -i /tmp/old-kubeadm.deb
-    sudo apt-get install -f
-
+    sudo apt-get -y install kubectl=1.8.4-00 kubelet=1.8.4-00 kubernetes-cni=0.5.1-00 kubeadm=1.8.4-00
     sudo apt-mark hold kubeadm kubectl kubelet kubernetes-cni
 
-once this is done, install docker if not already done on **all systems**:
+Once this is done, install docker if not already done on **all systems**:
 
 ::
 
-	apt-get install -y docker.io
+	sudo apt-get install -y docker.io
 
 
 Limitations
@@ -76,4 +71,6 @@ Limitations
 
 for a full list of the limitations go here: `kubeadm limitations <http://kubernetes.io/docs/getting-started-guides/kubeadm/#limitations>`_
 
-* the cluster created here has a single master, with a single etcd database running on it. This means that if the master fails, your cluster loses its configuration data and will need to be recreated from scratch
+.. warning::
+
+        The cluster created here has a single master, with a single etcd database running on it. This means that if the master fails, your cluster loses its configuration data and will need to be recreated from scratch

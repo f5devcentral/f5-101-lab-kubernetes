@@ -6,13 +6,14 @@ Master initialization
 
 The master is the system where the "control plane" components run, including etcd (the cluster database) and the API server (which the kubectl CLI communicates with). All of these components run in pods started by kubelet (which is why we had to setup docker first even on the master node)
 
-we will setup our master node on **master**, connect to it.
+In this section, we will setup our master node on the Ubuntu server we will call **master** and we will connect to it to explore system PODs running.
+It is always better to specify the server IP address where the Kubernetes Master is going to listen for API requests. We will specify the CIDR for our PODs Network and the CIDR for our SERVICEs Network; moreover, for lab purposes, we will ask for a token which will never expire.
 
-to setup **master** as a Kubernetes *master*, run the following command:
+To setup **master** as a Kubernetes *master*, run the following command:
 
 ::
 
-	sudo kubeadm init --api-advertise-addresses=10.1.10.11  --use-kubernetes-version=v1.5.3 --pod-network-cidr=10.244.0.0/16
+        sudo kubeadm init --apiserver-advertise-address 10.1.10.11 --pod-network-cidr 10.244.0.0/16 --service-cidr 10.166.0.0/16 --token-ttl 0
 
 Here we specify:
 
@@ -24,9 +25,9 @@ When running the command you should see something like this:
 .. image:: ../images/cluster-setup-guide-kubeadm-init-master.png
 	:align: center
 
-The initialization is successful if you see "Kubernetes master initialised successfully!"
+The initialization is successful if you see "Your Kubernetes master has initialized successfully!"
 
-you should see a line like this:
+In the output of the kubeadm command you should see a line like this:
 
 ::
 
@@ -39,16 +40,24 @@ This is the command to run on the node so that it registers itself with the mast
 
 	**save this command somewhere since you'll need it later**
 
+To start using your clusterm you need to:
+
+::
+
+        mkdir -p $HOME/.kube
+        sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+        sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
 You can monitor that the services start to run by using the command:
 
 ::
 
-	kubectl get pods --all-namespaces
+	kubectl get pods --all-namespaces -o wide
 
 .. image:: ../images/cluster-setup-guide-kubeadmin-init-check.png
 	:align: center
 
-kube-dns won't start until the network pod is setup.
+You'll see a number of PODs running plus kube-dns in pending state because it won't start until the network pod is setup.
 
 Network pod
 -----------
@@ -73,51 +82,67 @@ We will use Flannel as mentioned previously. To set Flannel as a network pod, we
 	wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 
-Change "vxlan" to "host-gw" for Type.
+Change "vxlan" to "host-gw" for Type and delete the "portmap" plugin; you shoud have a json section which reads:
 
 ::
 
-	net-conf.json: |
-		{
-		"Network": "10.244.0.0/16",
-		"Backend": {
-			"Type": "host-gw"
-		}
-		}
+ data:
+   cni-conf.json: |
+     {
+       "name": "cbr0",
+       "plugins": [
+         {
+           "type": "flannel",
+           "delegate": {
+             "hairpinMode": true,
+             "isDefaultGateway": true
+           }
+         }
+       ]
+     }
+   net-conf.json: |
+     {
+       "Network": "10.244.0.0/16",
+       "Backend": {
+         "Type": "host-gw"
+       }
+     }
 
-Also specify the correct interface (only necessary if you multiple interfaces)
+If we are using multiple interface in Ubuntu Server, we need to specify the "--iface" argument to the flanneld command:
 
 ::
 
-	command: [ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr", "--iface=ens4" ]
+      containers:
+      - name: kube-flannel
+        image: quay.io/coreos/flannel:v0.9.1-amd64
+        command:
+        - /opt/bin/flanneld
+        args:
+        - --ip-masq
+        - --kube-subnet-mgr
+        - --iface=eth1
 
 Now deploy flannel.
+
 ::
 
 	kubectl apply -f ./kube-flannel.yml
 	
-	
 
-
-
-
-check master state
-------------------
+Final checks on Kubernetes Master Server state
+----------------------------------------------
 
 If everything runs as expected you should have kube-dns that started successfully. To check the status of the different service, you can run the command:
 
 ::
 
-	kubectl get pods --all-namespaces
+	watch kubectl get pods --all-namespaces
 
 The output should show all services as running
 
 .. image:: ../images/cluster-setup-guide-kubeadmin-init-check-cluster-get-pods.png
 	:align: center
 
-
-
-kubectl get pods --all-namespaces
 
 ::
 
