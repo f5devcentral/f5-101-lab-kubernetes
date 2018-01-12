@@ -19,25 +19,22 @@ Start your UDF environment
 
 Connect to UDF and go to deployment. 
 
-Select the relevant blueprint: *[Kubernetes] how to setup ASP and CC* blueprint and deploy it. This blueprint contains a standalone Kubernetes deployment (1 master, 2 nodes).
+Select the relevant blueprint: *F5 BIG-IP Controller for Kubernetes* blueprint and deploy it. This blueprint contains a standalone Kubernetes deployment (1 master, 2 nodes).
 
 
 .. warning:: 
 
    With this blueprint, you don't have to do the cluster setup guide
 
-==================  ====================  ====================  ============  =============================================
+==================  ====================  ====================  ==============  =============================================
      Hostname           Management IP        Kubernetes IP          Role                 Login/Password
-==================  ====================  ====================  ============  =============================================
-     Master 1             10.1.1.4            10.1.10.11          Master       ssh: ubuntu/<your key> - su : root/default           
-      node 1              10.1.1.5            10.1.10.21           node        ssh: ubuntu/<your key> - su : root/default
-      node 2              10.1.1.6            10.1.10.22           node        ssh: ubuntu/<your key> - su : root/default
+==================  ====================  ====================  ==============  =============================================
+     Master 1             10.1.1.10            10.1.10.11          Master        ssh: centos/<your key> - su : root/default           
+      node 1              10.1.1.11            10.1.10.21           node         ssh: centos/<your key> - su : root/default
+      node 2              10.1.1.12            10.1.10.22           node         ssh: centos/<your key> - su : root/default
      Windows                10.1.1.7            10.1.10.50        Jumpbox            administrator / &NUyBADsdo
-==================  ====================  ====================  ============  =============================================
-
-.. note::
-
-  There is also a docker registry available to centralize our docker images. it's accessible via 10.1.10.11:5000
+      splunk              10.1.1.8            10.1.10.100       jenkins/splunk   ssh: ubuntu/<your key> - su : root/default
+==================  ====================  ====================  ==============  =============================================
 
 Access your environment
 -----------------------
