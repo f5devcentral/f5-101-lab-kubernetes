@@ -34,16 +34,6 @@ Container Connector deployment
 
 Here we consider you have already retrieved the F5 container connector image and loaded it in the environment. 
 
-.. note::
-
-	If you use the UDF blueprint it's already loaded in our private registry 10.1.10.11:5000 (10.1.10.11:5000/k8s-bigip-ctlr:v1.0.0).
-
-If you haven't loaded it in your environment, you have two choices :
-
-#. load it on **all your systems** with the docker load -i <file_name.tar> 
-#. load it on a system and push it into your registry
-
-
 Now that our container is loaded, we need to define a deployment: `Kubernetes deployments <https://kubernetes.io/docs/user-guide/deployments/>`_ and create a secret to hide our bigip credentials. `Kubernetes secrets <https://kubernetes.io/docs/user-guide/secrets/>`_
 
 On the **master** , we need to setup a deployment file to load our container and also setup a secret for our big-ip credentials
@@ -64,7 +54,7 @@ You will need to create a serviceaccount for the controller to be able to access
 
 You will also need to apply an RBAC policy.  create a file called f5-k8s-sample-rbac.yaml
 
-::
+.. code-block:: yaml
 
     # for use in k8s clusters using RBAC
     kind: ClusterRole
@@ -268,7 +258,7 @@ Now we can check our container logs:
 
 You can connect to your container with kubectl also: 
 
-::
+.. code-block:: shell
 
 	 kubectl exec -it k8s-bigip-ctlr-deployment-710074254-b9dr8 -n kube-system  -- /bin/sh
 
