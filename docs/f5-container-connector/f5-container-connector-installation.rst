@@ -56,6 +56,74 @@ On the **master** , we need to setup a deployment file to load our container and
 		:align: center
 		:scale: 50%
 
+You will need to create a serviceaccount for the controller to be able to access the Kubernetes API when RBAC is enabled in Kubernetes.  To create a serviceaccount run:
+
+::
+
+    kubectl create serviceaccount bigip-ctlr -n kube-system
+
+You will also need to apply an RBAC policy.  create a file called f5-k8s-sample-rbac.yaml
+
+::
+
+    # for use in k8s clusters using RBAC
+    kind: ClusterRole
+    apiVersion: rbac.authorization.k8s.io/v1beta1
+    metadata:
+      name: bigip-ctlr-clusterrole
+    rules:
+    - apiGroups:
+      - ""
+      - "extensions"
+      resources:
+      - nodes
+      - services
+      - endpoints
+      - namespaces
+      - ingresses
+      - secrets
+      verbs:
+      - get
+      - list
+      - watch
+    - apiGroups:
+      - ""
+      - "extensions"
+      resources:
+      - configmaps
+      - events
+      - ingresses/status
+      verbs:
+      - get
+      - list
+      - watch
+      - update
+      - create
+      - patch
+    
+    ---
+    
+    kind: ClusterRoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1beta1
+    metadata:
+      name: bigip-ctlr-clusterrole-binding
+      namespace: kube-system
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: bigip-ctlr-clusterrole
+    subjects:
+    - kind: ServiceAccount
+      name: bigip-ctlr
+      namespace: kube-system
+    
+
+To apply the RBAC policy run
+
+::
+
+	kubectl create -f f5-k8s-sample-rbac.yaml
+
 To setup the secret containing your BIG-IP login and password, you can run the following command:
 
 ::
@@ -72,42 +140,58 @@ create a file called f5-cc-deployment.yaml. Here is its content:
 
 ::
 
-        apiVersion: extensions/v1beta1
-        kind: Deployment
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      name: k8s-bigip-ctlr-deployment
+      namespace: kube-system
+    spec:
+      replicas: 1
+      template:
         metadata:
-          name: k8s-bigip-ctlr-deployment
-          namespace: kube-system
+          name: k8s-bigip-ctlr
+          labels:
+            app: k8s-bigip-ctlr
         spec:
-          replicas: 1
-          template:
-            metadata:
-              name: k8s-bigip-ctlr
-              labels:
-                app: k8s-bigip-ctlr
-            spec:
-              containers:
-                - name: k8s-bigip-ctlr
-                  image: "f5networks/k8s-bigip-ctlr:1.1.1"
-                  imagePullPolicy: IfNotPresent
-                  env:
-                    - name: BIGIP_USERNAME
-                      valueFrom:
-                        secretKeyRef:
-                          name: bigip-login
-                          key: username
-                    - name: BIGIP_PASSWORD
-                      valueFrom:
-                        secretKeyRef:
-                          name: bigip-login
-                          key: password
-                  command: ["/app/bin/k8s-bigip-ctlr"]
-                  args: [
-                    "--bigip-username=$(BIGIP_USERNAME)",
-                    "--bigip-password=$(BIGIP_PASSWORD)",
-                    "--bigip-url=10.1.10.60",
-                    "--bigip-partition=kubernetes",
-                    "--namespace=default"
-                  ]
+          serviceAccountName: bigip-ctlr
+          containers:
+            - name: k8s-bigip-ctlr
+              # replace the version as needed
+              image: "f5networks/k8s-bigip-ctlr:1.3.0"
+              env:
+                - name: BIGIP_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: bigip-login
+                      key: username
+                - name: BIGIP_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: bigip-login
+                      key: password
+              command: ["/app/bin/k8s-bigip-ctlr"]
+              args: [
+                "--bigip-username=$(BIGIP_USERNAME)",
+                "--bigip-password=$(BIGIP_PASSWORD)",
+                "--bigip-url=10.1.10.60",
+                "--bigip-partition=kubernetes",
+                # The Controller can use local DNS to resolve hostnames;
+                # defaults to LOOKUP; can be replaced with custom DNS server IP
+                # or left blank (introduced in v1.3.0)
+                "--resolve-ingress-names=LOOKUP"
+                # The Controller can access Secrets by default;
+                # set to "false" if you only want to use preconfigured
+                # BIG-IP SSL profiles
+                #"--use-secrets=false",
+                # The Controller watches all namespaces by default.
+                # To manage a single namespace, or multiple namespaces, provide a
+                # single entry for each. For example:
+                # "--namespace=test",
+                # "--namespace=prod"
+                ]
+          imagePullSecrets:
+            - name: f5-docker-images
+            - name: bigip-login
 
 
 

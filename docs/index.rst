@@ -46,17 +46,7 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-   :caption: F5 ASP and kube-proxy
-
-   f5-asp-and-f5-kube-proxy/f5-asp-and-kube-proxy-overview.rst
-   f5-asp-and-f5-kube-proxy/f5-asp-and-kube-proxy-deployment.rst
-   f5-asp-and-f5-kube-proxy/f5-asp-and-kube-proxy-test.rst
-
- 
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Cluster setup
+   :caption: Cluster setup (For reference)
 
    cluster-setup-guide/cluster-setup-guide-cluster-installation.rst
    cluster-setup-guide/cluster-setup-guide-master-setup.rst

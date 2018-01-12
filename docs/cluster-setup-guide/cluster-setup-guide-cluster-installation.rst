@@ -18,7 +18,7 @@ As a reminder, in this example, this is our cluster setup:
 
 .. warning::
 
-        This guide is certified with Kubernetes version 1.8.4-00
+        This guide is for Kubernetes version 1.7.11
 
 For this setup we will leverage **kubeadm** to install Kubernetes on your own Ubuntu Servers version 16.04; steps we are going to use are specified in details here: `Ubuntu getting started guide 16.04 <http://kubernetes.io/docs/getting-started-guides/kubeadm/>`
 
@@ -41,7 +41,7 @@ To make sure the systems are up to date, run these commands on **all systems**:
 installation
 -------------
 
-We need to be sure the Ubuntu OS is up to date, we add Kubernetes repository to the list ov available Ubuntu package sources adn we install Kebernetes packages for version 1.8.4, making sure to hold with this version even when upgrading the OS. THis procedure will install Docker on all systems because most of the component of Kubernetes will leverage this container technology.
+We need to be sure the Ubuntu OS is up to date, we add Kubernetes repository to the list ov available Ubuntu package sources and we install Kubernetes packages for version 1.7.x, making sure to hold with this version even when upgrading the OS. This procedure will install Docker on all systems because most of the component of Kubernetes will leverage this container technology.
 
 As previously said, you need **root privileges** for this section, either use sudo or su to gain the required privileges; morover be sure to execute this procedure on **all systems**.
 
@@ -56,7 +56,7 @@ As previously said, you need **root privileges** for this section, either use su
     EOF
     sudo apt-get update
 
-    sudo apt-get -y install kubectl=1.8.4-00 kubelet=1.8.4-00 kubernetes-cni=0.5.1-00 kubeadm=1.8.4-00
+    sudo apt-get -y install kubectl=1.7.11-00 kubelet=1.7.11-00 kubernetes-cni=0.5.1-00 kubeadm=1.7.11-00
     sudo apt-mark hold kubeadm kubectl kubelet kubernetes-cni
 
 Once this is done, install docker if not already done on **all systems**:

@@ -13,7 +13,7 @@ To setup **master** as a Kubernetes *master*, run the following command:
 
 ::
 
-        sudo kubeadm init --apiserver-advertise-address 10.1.10.11 --pod-network-cidr 10.244.0.0/16 --service-cidr 10.166.0.0/16 --token-ttl 0
+        sudo kubeadm init --apiserver-advertise-address 10.1.10.11 --pod-network-cidr 10.244.0.0/16 --service-cidr 10.166.0.0/16 --token-ttl 0 --node-name [DNS node name] 
 
 Here we specify:
 
@@ -159,4 +159,23 @@ The output should show all services as running
 .. image:: ../images/cluster-setup-guide-kubeadmin-init-check-cluster-info.png
 	:align: center
 
+In AWS you may need to modify kubelet to ensure that the correct name is used by the node and that it can join correctly.  Example in /etc/systemd/system/kubelet.service.d/10-kubeadm.conf.  This attempts to workaround: https://github.com/kubernetes/kubernetes/issues/47695
+
+::
+
+	[Service]
+	Environment="KUBELET_KUBECONFIG_ARGS=--kubeconfig=/etc/kubernetes/kubelet.conf --require-kubeconfig=true --hostname-override=ip-10-1-1-11.us-west-2.compute.internal --node-ip=10.1.10.21"
+	Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
+	Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin"
+	Environment="KUBELET_DNS_ARGS=--cluster-dns=10.96.0.10 --cluster-domain=cluster.local"
+	Environment="KUBELET_AUTHZ_ARGS=--authorization-mode=Webhook --client-ca-file=/etc/kubernetes/pki/ca.crt"
+	Environment="KUBELET_CADVISOR_ARGS=--cadvisor-port=0"
+	Environment="KUBELET_CGROUP_ARGS=--cgroup-driver=systemd"
+	ExecStart=
+	ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_CADVISOR_ARGS $KUBELET_CGROUP_ARGS $KUBELET_EXTRA_ARGS
+
+You will also want to remove the line "- --admission-control=..." from /etc/kubernetes/manifests/kube-apiserver.yaml
+
 The next step will be to have our *nodes* join the *master*
+
+
