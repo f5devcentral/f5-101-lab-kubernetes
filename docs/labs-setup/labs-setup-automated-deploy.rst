@@ -12,7 +12,7 @@ If this is the case, you can just leverage a script to automatically deploy ever
 
 Here is how to use the script: 
 
-#. Connect to the Master Node (Either from UDF interface and SSH or from the Jumpbox/PUTTY) as user ubuntu
+#. Connect to the Splunk node (Either from UDF interface and SSH or from the Jumpbox/PUTTY) as user ubuntu
 #. Go to f5-demo (/home/ubuntu/f5-demo)
 #. Execute the script setup_demo.sh
 
