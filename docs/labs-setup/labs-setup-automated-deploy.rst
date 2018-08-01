@@ -1,7 +1,7 @@
 Automated F5 solutions deployment via CLI
 =========================================
 
-This is only available for users having access to F5 UDF. You need to use the blueprint called *[Kubernetes] how to setup ASP and CC*
+This is only available for users having access to F5 UDF. You need to use the blueprint called *F5 BIG-IP Controller for Kubernetes*
 
 You may just need to have access to a kubernetes environment with F5 solutions already deployed on top of it (customer demo, troubleshooting, testing). 
 
@@ -12,7 +12,7 @@ If this is the case, you can just leverage a script to automatically deploy ever
 
 Here is how to use the script: 
 
-#. Connect to the Master Node (Either from UDF interface and SSH or from the Jumpbox/PUTTY) as user ubuntu
+#. Connect to the Splunk node (Either from UDF interface and SSH or from the Jumpbox/PUTTY) as user ubuntu
 #. Go to f5-demo (/home/ubuntu/f5-demo)
 #. Execute the script setup_demo.sh
 
@@ -46,7 +46,7 @@ Once all the containers are in a running state, you can try to access the Fronte
 Automated F5 solutions deployment via Jenkins
 =============================================
 
-This is only available for users having access to F5 UDF. You need to use the blueprint called *[Kubernetes] how to setup ASP and CC*
+This is only available for users having access to F5 UDF. You need to use the blueprint called *F5 BIG-IP Controller for Kubernetes*
 
 You may just need to have access to a kubernetes environment with F5 solutions already deployed on top of it (customer demo, troubleshooting, testing). 
 

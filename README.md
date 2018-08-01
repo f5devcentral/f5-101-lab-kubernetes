@@ -9,6 +9,6 @@ The purpose of this lab is to give you more visibility on
 
 We consider that you have a valid UDF access (Private Cloud of F5 Networks) to do this lab. If not, you may review the pre-requisites about our lab setup .
 
-The lab guide is hosted here: http://101-lab-kubernetes.readthedocs.io
+The lab guide is hosted here: http://f5-101-lab-kubernetes.readthedocs.io
 
-We also have the option to use a script to automatically deploy the F5 solutions
+We also have the option to use a script to [automatically deploy](http://f5-101-lab-kubernetes.readthedocs.io/en/latest/labs-setup/labs-setup-automated-deploy.html) the F5 solutions

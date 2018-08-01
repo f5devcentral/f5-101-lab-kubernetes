@@ -1,7 +1,7 @@
 Node setup
 ==========
 
-Once the master is setup and running, we need to connect our *nodes* to it. 
+Once the master is setup and running, we need to connect our *nodes* to it. Please be sure you did all the steps reported in the cluster installation section on each node of the cluster.
 
 
 Join the master
@@ -11,12 +11,12 @@ to join the master we need to run the command highlighted during the master init
 
 ::
 
-	sudo kubeadm join --token=62468f.9dfb3fc97a985cf9 10.1.10.11
+	sudo kubeadm join --token=62468f.9dfb3fc97a985cf9 10.1.10.11 --node-name [DNS name]
 
 
 the output should be like this :
 
-.. image:: ../images/cluster-setup-guide-node-setup-join-master.png
+.. image:: ../images/cluster-setup-guide-node-setup-join-master.jpg
 	:align: center
 
 
@@ -24,96 +24,34 @@ to make sure that your *nodes* have joined, you can run this command on the *mas
 
 ::
 
-	 kubectl get nodes
+	 kubectl get nodes -o wide
 
 You should see your cluster (ie *master* + *nodes*)
 
-.. image:: ../images/cluster-setup-guide-node-setup-check-nodes.png
+.. image:: ../images/cluster-setup-guide-node-setup-check-nodes.jpg
 	:align: center
 
 
-Check that all the services are started as expected (run on the **master**): 
+Check that all the services are started as expected and everything is in a stable "running" state, running this command on the **master**: 
 
 ::
 
-	kubectl get pods --all-namespaces
+	kubectl get pods --all-namespaces -o wide
 
-.. image:: ../images/cluster-setup-guide-node-setup-check-services.png
+.. image:: ../images/cluster-setup-guide-node-setup-check-services.jpg
 	:align: center
 
-Here we see that some weave net containers keep restarting. This is due to our multi nic setup. Check this link: `Deploying Kubernetes 1.4 on Ubuntu Xenial with Kubeadm <https://dickingwithdocker.com/deploying-kubernetes-1-4-on-ubuntu-xenial-with-kubeadm/>`_
-
-You can validate this by connecting to a node and check the logs for the relevant container
-
-.. image:: ../images/cluster-setup-guide-node-setup-crash-weave.png
-	:align: center
-
-to fix this, you need to run the following command on the **master**: 
+In AWS you may need to modify kubelet to ensure that the correct name is used by the node and that it can join correctly.  Example in /etc/systemd/system/kubelet.service.d/10-kubeadm.conf.  This attempts to workaround: https://github.com/kubernetes/kubernetes/issues/47695
 
 ::
 
-	sudo apt-get install -y jq
-
-	kubectl -n kube-system get ds -l 'component=kube-proxy' -o json | jq '.items[0].spec.template.spec.containers[0].command |= .+ ["--cluster-cidr=10.32.0.0/12"]' | kubectl apply -f - && kubectl -n kube-system delete pods -l 'component=kube-proxy'
-
-.. image:: ../images/cluster-setup-guide-node-setup-crash-weave-fix.png
-	:align: center
-	:scale: 50%
-
-Once this is done, you may check that everything is in a stable "Running" state: 
-
-::
-
-	kubectl get pods --all-namespaces
-
-.. image:: ../images/cluster-setup-guide-node-setup-check-all-ok.png
-	:align: center
-
-If you want to enable Kubernetes UI, you may install the dashboard. Run the following command on the **master**
-
-First download a copy of the YAML file to deploy the dashboard.
-::
-
-	wget https://git.io/kube-dashboard-no-rbac -O kube-dashboard-no-rbac.yml
-
-Modify the service to be type NodePort
-
-::
-
-	spec:
-	  ports:
-	  - port: 80
-	    targetPort: 9090
-	  type: NodePort
-	  selector:
-	    k8s-app: kubernetes-dashboard
-
-Now run
-
-::
-
-	kubectl create -f kube-dashboard-no-rbac.yml
-
-You should see the following output: 
-
-::
-	
-	deployment "kubernetes-dashboard" created
-	service "kubernetes-dashboard" created
-
-to access the dashboard, you need to see on which port it is listening. You can find this information with the following command (on the **master**):
-
-::
-
-	kubectl describe svc kubernetes-dashboard -n kube-system
-
-.. image:: ../images/cluster-setup-guide-check-port-ui.png
-	:align: center	
-
-Here we can see that it is listening on port: 31578 (NodePort)
-
-We can now access the dashboard by connecting to the following uri http://<master IP>:31578
-
-.. image:: ../images/cluster-setup-guide-access-ui.png
-	:align: center
-	:scale: 50%
+	[Service]
+	Environment="KUBELET_KUBECONFIG_ARGS=--kubeconfig=/etc/kubernetes/kubelet.conf --require-kubeconfig=true --hostname-override=ip-10-1-1-11.us-west-2.compute.internal --node-ip=10.1.10.21"
+	Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
+	Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin"
+	Environment="KUBELET_DNS_ARGS=--cluster-dns=10.96.0.10 --cluster-domain=cluster.local"
+	Environment="KUBELET_AUTHZ_ARGS=--authorization-mode=Webhook --client-ca-file=/etc/kubernetes/pki/ca.crt"
+	Environment="KUBELET_CADVISOR_ARGS=--cadvisor-port=0"
+	Environment="KUBELET_CGROUP_ARGS=--cgroup-driver=systemd"
+	ExecStart=
+	ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_CADVISOR_ARGS $KUBELET_CGROUP_ARGS $KUBELET_EXTRA_ARGS
